@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "928936563022",
+    "project_id": "messaging-d921b",
+    "storage_bucket": "messaging-d921b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928936563022:android:c3ce452230646d5fac0e1f",
+        "android_client_info": {
+          "package_name": "com.msg"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928936563022-fq1nvelgfp0nsh5vvmnql00imt381gm9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.msg",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "928936563022-jpdo6j09b6r83qpoaaj3kl28dml5i9cb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.msg",
+            "certificate_hash": "29603f191891394c71c3ff8d5094f0a38637d829"
+          }
+        },
+        {
+          "client_id": "928936563022-8gbbrcvbeivj8k55vkc9hl2ir01a1nnk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdYGEX2usiCP4uyK2kfcUkc3lKidnZtuw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928936563022-8gbbrcvbeivj8k55vkc9hl2ir01a1nnk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

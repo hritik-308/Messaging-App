@@ -15,9 +15,9 @@ import {
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import PhoneInput from 'react-native-phone-number-input';
-import OtpInputs from 'react-native-otp-inputs';
 import {firebase,database} from '@react-native-firebase/database'
 import Chat from '../Container/chat';
+import uuid from 'react-native-uuid';
 
 export default function LoginScreen({navigation},values) {
 
@@ -30,6 +30,7 @@ export default function LoginScreen({navigation},values) {
   const createUser = () => {
     const newReference = firebase.database().ref('/Users').push();
     const userData = {
+      uid:uuid.v4(),
       Name: Name,
       phoneNumber:phoneNumber,
     };
@@ -48,7 +49,7 @@ export default function LoginScreen({navigation},values) {
   async function signInWithPhoneNumber(phoneNumber) {
     const confirmation = await auth().signInWithPhoneNumber(
       '+91' + phoneNumber,
-    );
+    ).uid;
     setConfirm(confirmation);
   }
   async function confirmCode() {

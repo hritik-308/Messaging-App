@@ -1,4 +1,5 @@
-import React, {useState,useEffect} from 'react';
+import {database, firebase} from '@react-native-firebase/database';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,8 +8,9 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  LogBox
+  LogBox,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 
 const data = [
   {
@@ -78,11 +80,42 @@ const data = [
     time: '12:34',
   },
 ];
-const AllUsers = ({navigation}) => {
-    useEffect(() => {
-        LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
-      }, [])
+const AllUsers = ({navigation}, props) => {
+  //  const {userData} =useSelector(state=>state.User)
+// console.log('ndiobnce=====>',props)
+  const [allUser, setallUser] = useState([]);
+  const [allUserBackup, setallUserBackup] = useState([]);
+  const [filterUser, setfilterUser] = useState([]);
+  useEffect(() => {
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+  }, []);
+
+  useEffect(() => {
+    getAllUser();
+  }, []);
+
+  const getAllUser = () => {
+    firebase
+      .database()
+      .ref('/users/')
+      .once('value')
+      .then(snapshot => {
+        // console.log('alluser Data:', Object.values(snapshot.val()));
+        setallUser(Object.values(snapshot.val()).filter((it)=>it.id ))
+        setallUserBackup(Object.values(snapshot.val()).filter((it)=>it.id ))
+        
+      });
+  };
+  const searchUser=(val)=>{
+    setResult(val);
+    setallUserBackup(allUser.filter((it)=>it.Name.match(val)))
+
+  }
+
+
+
   const renderItem = ({item}) => {
+    console.log("dewedw",item)
     return (
       <View style={{flexDirection: 'row', marginTop: 40}}>
         <View
@@ -104,12 +137,12 @@ const AllUsers = ({navigation}) => {
           />
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Chat', {Username: item.name})}>
+          onPress={() => navigation.navigate('Chat', {Username: item.Name})}>
           <View style={{marginLeft: 40}}>
-            <Text style={{fontWeight: 'bold'}}>{item.name}</Text>
+            <Text style={{fontWeight: 'bold'}}>{item.Name}</Text>
           </View>
           <View style={{marginLeft: 250, flexDirection: 'row'}}>
-            <Text style={{color: '#000'}}>{item.time}</Text>
+            <Text style={{color: '#000'}}>5:11</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -150,7 +183,7 @@ const AllUsers = ({navigation}) => {
             style={{flexWrap: 'wrap', flex: 1, borderWidth: 1}}
             placeholder="Search"
             value={result}
-            onChangeText={setResult}
+            onChangeText={val =>searchUser(val)}
           />
         </View>
         <View
@@ -178,12 +211,12 @@ const AllUsers = ({navigation}) => {
         </View>
       </View>
       <View>
-      <FlatList
-        nestedScrollEnabled
-        data={data}
-        renderItem={renderItem}
-        showsHorizontalScrollIndicator={false}
-      />
+        <FlatList
+          nestedScrollEnabled
+          data={allUser}
+          renderItem={renderItem}
+          showsHorizontalScrollIndicator={false}
+        />
       </View>
     </ScrollView>
   );

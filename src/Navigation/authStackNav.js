@@ -16,7 +16,7 @@ export default function StackNavigation() {
       headerTintColor: '#fff',
       headerTitleStyle: {
         fontWeight: 'bold',
-      },
+      },                          
     }}
     >
       

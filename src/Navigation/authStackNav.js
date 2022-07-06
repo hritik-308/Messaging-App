@@ -20,9 +20,9 @@ export default function StackNavigation() {
     }}
     >
       
-      <Stack.Screen name="AllUsers" component={AllUsers}  options={{headerShown:false}} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} options={{headerShown:false}}/>
       <Stack.Screen name="Chat" component={Chat}  options={{headerShown:false}} />
+      <Stack.Screen name="AllUsers" component={AllUsers}  options={{headerShown:false}} />
       
 
     </Stack.Navigator>

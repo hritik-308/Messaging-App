@@ -11,6 +11,7 @@ import {
   LogBox,
 } from 'react-native';
 import {useSelector} from 'react-redux';
+import uuid from 'react-native-uuid'
 
 const data = [
   {
@@ -86,6 +87,8 @@ const AllUsers = ({navigation}, props) => {
   const [allUser, setallUser] = useState([]);
   const [allUserBackup, setallUserBackup] = useState([]);
   const [filterUser, setfilterUser] = useState([]);
+
+  const {userData} = useSelector(state => state.User);
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }, []);
@@ -101,8 +104,8 @@ const AllUsers = ({navigation}, props) => {
       .once('value')
       .then(snapshot => {
         // console.log('alluser Data:', Object.values(snapshot.val()));
-        setallUser(Object.values(snapshot.val()).filter((it)=>it.id ))
-        setallUserBackup(Object.values(snapshot.val()).filter((it)=>it.id ))
+        setallUser(Object.values(snapshot.val()).filter((it)=>it.id != userData.id))
+        setallUserBackup(Object.values(snapshot.val()).filter((it)=>it.id != userData.id ))
         
       });
   };
@@ -112,9 +115,53 @@ const AllUsers = ({navigation}, props) => {
 
   }
 
+  const createChatList = data => {
+    firebase
+    .database()
+      .ref('/chatlist/' + userData.id + '/' + data.id)
+      .once('value')
+      .then(snapshot => {
+        console.log('User data: ', snapshot.val());
 
+        if (snapshot.val() == null) {
+          let roomId = uuid.v4();
+          let myData = {
+            roomId,
+            id: userData.id,
+            Name: userData.Name,
+            phoneNumber:userData.phoneNumber,
+            lastMsg: '',
+          };
+          firebase
+          .database()
+            .ref('/chatlist/' + data.id + '/' + userData.id)
+            .update(myData)
+            .then(() => console.log('Data updated.'));
 
+          // delete data['password'];
+          data.lastMsg = '';
+          data.roomId = roomId;
+          firebase
+          .database()
+            .ref('/chatlist/' + userData.id + '/' + data.id)
+            .update(data)
+            .then(() => console.log('Data updated.'));
+
+          navigation.navigate('Chat', {receiverData: data,senderData:myData});
+        } else {
+          navigation.navigate('Chat', {receiverData: snapshot.val()});
+        }
+      });
+  };
+
+  
+  
+  
   const renderItem = ({item}) => {
+    const chatList = () =>{
+      createChatList(item),
+      navigation.navigate('Chat', {Username: item.Name,chatroomId : data.roomId,userData:userData.id,recieverDatas:data.id})
+    }
     console.log("dewedw",item)
     return (
       <View style={{flexDirection: 'row', marginTop: 40}}>
@@ -137,7 +184,7 @@ const AllUsers = ({navigation}, props) => {
           />
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Chat', {Username: item.Name})}>
+          onPress={() => chatList()}>
           <View style={{marginLeft: 40}}>
             <Text style={{fontWeight: 'bold'}}>{item.Name}</Text>
           </View>

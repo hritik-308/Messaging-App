@@ -19,6 +19,9 @@ import Chat from '../Container/chat';
 import AllUsers from '../Container/allUsers';
 import { firebase } from '@react-native-firebase/database';
 import uuid from 'react-native-uuid'
+import { useDispatch, useSelector } from 'react-redux';
+import SimpleToast from 'react-native-simple-toast';
+import {setUser} from '../redux/reducer/user'
 
 
 export default function LoginScreen({navigation},values) {
@@ -28,21 +31,44 @@ export default function LoginScreen({navigation},values) {
   const [confirm, setConfirm] = useState(null);
   const[Name,setName]=useState();
   const [code, setCode] = useState('');
+  const [Account,setAccount]=useState()
 
 
+  const dispatch=useDispatch()
+  // const {currUser}= useSelector(state =>state.User.userData)
   const createUser = async () => {
-    const userData = {
+    const usersData = {
       id:uuid.v4(),
       Name: Name,
       phoneNumber:phoneNumber,
     };
-    const newReference = firebase.database().ref('/users/' + userData.id);
+    const newReference = firebase.database().ref('/users/' + usersData.id);
     //Creating refernce in rnFirebase
     newReference
-      .set(userData)
+      .set(usersData)
       .then(() => console.log('Data updated.'))
-      .then(() => setUData(userData))
+      .then(() => dispatch(setUser(usersData)))
       // .then(() => navigation.navigate('Chat'));
+  };
+
+  const loginUser = async () => {
+    database()
+      .ref('/users/')
+
+      .once('value')
+      .then( async snapshot => {
+        if (snapshot.val() == null) {
+           SimpleToast.show("Invalid phoneNumber!");
+           return false;
+        }
+        let userData = Object.values(snapshot.val())[0];
+       
+
+        console.log('User data:===========> ', userData);
+        dispatch(setUser(userData));
+         setAccount(userData);
+        SimpleToast.show("Login Successfully!");
+      });
   };
 
   const AddUser =()=>{
@@ -119,15 +145,15 @@ export default function LoginScreen({navigation},values) {
           }}>
              <View style={{flexDirection:'row',marginRight:50}}>
 
-<Text style={{marginRight:60,marginTop:15,fontWeight:'bold',fontSize:20,color:"#000"}}>Name :</Text>
-<TextInput
-onChangeText={text => setName(text)}
-value={values.Name}
-placeholder="Enter Your Name"
-withShadow
-autoFocus
-/>
-</View>
+                  <Text style={{marginRight:60,marginTop:15,fontWeight:'bold',fontSize:20,color:"#000"}}>Name :</Text>
+                   <TextInput
+                   onChangeText={text => setName(text)}
+                    value={values.Name}
+                    placeholder="Enter Your Name"
+                    withShadow
+                    autoFocus
+                    />
+            </View>
           <PhoneInput
             onChangeText={text => setPhoneNumber(text)}
             value={phoneNumber}

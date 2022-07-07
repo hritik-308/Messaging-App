@@ -3,6 +3,7 @@ import LoginScreen from '../Auth/PhoneAuth';
 import Chat from '../Container/chat';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AllUsers from '../Container/allUsers';
+import Profile from '../Container/Profile/Profile';
 const Stack = createNativeStackNavigator();
 export default function StackNavigation() {
   
@@ -23,6 +24,8 @@ export default function StackNavigation() {
       <Stack.Screen name="LoginScreen" component={LoginScreen} options={{headerShown:false}}/>
       <Stack.Screen name="Chat" component={Chat}  options={{headerShown:false}} />
       <Stack.Screen name="AllUsers" component={AllUsers}  options={{headerShown:false}} />
+      <Stack.Screen name="Profile" component={Profile}  options={{headerShown:false}} />
+      
       
 
     </Stack.Navigator>

@@ -11,7 +11,7 @@ import {
   LogBox,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import uuid from 'react-native-uuid'
+import uuid from 'react-native-uuid';
 
 const data = [
   {
@@ -81,21 +81,24 @@ const data = [
     time: '12:34',
   },
 ];
-const AllUsers = ({navigation}, props,) => {
+const AllUsers = ({navigation}, props,data) => {
   //  const {userData} =useSelector(state=>state.User)
-// console.log('ndiobnce=====>',props)
+  // console.log('ndiobnce=====>',props)
   const [allUser, setallUser] = useState([]);
   const [allUserBackup, setallUserBackup] = useState([]);
   const [filterUser, setfilterUser] = useState([]);
 
   const {userData} = useSelector(state => state.User);
-  console.log('dfb------------------->',userData)
+  // const lastmes=props.route.params.lstms
+  // console.log('dfb------------------->', userData);
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }, []);
 
   useEffect(() => {
     getAllUser();
+    chlist()       
+    // console.log(allUser);
   }, []);
 
   const getAllUser = () => {
@@ -104,10 +107,23 @@ const AllUsers = ({navigation}, props,) => {
       .ref('/users/')
       .once('value')
       .then(snapshot => {
-        console.log('alluser Data:', Object.values(snapshot.val()));
-        setallUser(Object.values(snapshot.val()).filter((it)=>it.id !== userData.id))
-        setallUserBackup(Object.values(snapshot.val()).filter((it)=>it.id !== userData.id ))
-        
+        // console.log('alluser Data:', Object.values(snapshot.val()));
+        setallUser(
+          Object.values(snapshot.val()).filter(it => it.id !== userData.id),
+        );
+        setallUserBackup(
+          Object.values(snapshot.val()).filter(it => it.id !== userData.id),
+        );
+      });
+  };
+  const chlist = () => {
+    firebase
+      .database()
+      .ref('/chatlist/')
+      .once('value')
+      .then(snapshot => {
+        console.log(snapshot)
+        // console.log('clist Data:',  Object.values(Object.values(snapshot.val()))[0]);
       });
   };
   // const searchUser=(val)=>{
@@ -118,53 +134,53 @@ const AllUsers = ({navigation}, props,) => {
 
   const createChatList = data => {
     firebase
-    .database()
+      .database()
       .ref('/chatlist/' + userData.id + '/' + data.id)
       .once('value')
       .then(snapshot => {
-        console.log('User data: ', snapshot.val());
-        
+        // console.log('User data: ', snapshot.val());
+
         if (snapshot.val() == null) {
           let roomId = uuid.v4();
           let myData = {
             roomId,
             id: userData.id,
             Name: userData.Name,
-            phoneNumber:userData.phoneNumber,
-            about:userData.about,
+            phoneNumber: userData.phoneNumber,
+            img: userData.img,
+            about: userData.about,
             lastMsg: '',
           };
           firebase
-          .database()
+            .database()
             .ref('/chatlist/' + data.id + '/' + userData.id)
             .update(myData)
-            .then(() => console.log('Data updated.'));
+            // .then(() => console.log('Data updated.'));
 
           // delete data['password'];
           data.lastMsg = '';
           data.roomId = roomId;
           firebase
-          .database()
+            .database()
             .ref('/chatlist/' + userData.id + '/' + data.id)
             .update(data)
-            .then(() => console.log('Data updated.'));
-            
-            navigation.navigate('Chat', {receiverData: data});
-          } else {
-            navigation.navigate('Chat', {receiverData: snapshot.val()});
-          }
-        });
-        
-      };
-      
-      
-      
+            // .then(() => console.log('Data updated.'));
+
+          navigation.navigate('Chat', {receiverData: data});
+        } else {
+          navigation.navigate('Chat', {receiverData: snapshot.val()});
+        }
+      });
+  };
+  // console.log("hii============>",data.lastMsg)
+
   const renderItem = ({item}) => {
-    const chatList = () =>{
-      createChatList(item)
+    const chatList = () => {
+      createChatList(item);
       // navigation.navigate('Chat', {Username: item.Name,chatroomId : data.roomId,userData:userData.id,recieverDatas:data.id,})
-    }
-    // console.log("dewedw",item)
+    };
+    // console.log('dewedw');
+
     return (
       <View style={{flexDirection: 'row', marginTop: 40}}>
         <View
@@ -175,7 +191,7 @@ const AllUsers = ({navigation}, props,) => {
             borderColor: '#2994FF',
           }}>
           <Image
-            source={item.pic}
+            source={{uri: item.img}}
             style={{
               justifyContent: 'flex-start',
               height: 40,
@@ -185,10 +201,12 @@ const AllUsers = ({navigation}, props,) => {
             }}
           />
         </View>
-        <TouchableOpacity
-          onPress={() => chatList()}>
+        <TouchableOpacity onPress={() => chatList()}>
           <View style={{marginLeft: 40}}>
             <Text style={{fontWeight: 'bold'}}>{item.Name}</Text>
+            <View>
+              <Text style={{color: '#000'}}>{item.lastMsg}</Text>
+            </View>
           </View>
           <View style={{marginLeft: 250, flexDirection: 'row'}}>
             <Text style={{color: '#000'}}>5:11</Text>
@@ -232,7 +250,7 @@ const AllUsers = ({navigation}, props,) => {
             style={{flexWrap: 'wrap', flex: 1, borderWidth: 1}}
             placeholder="Search"
             value={result}
-            onChangeText={val =>searchUser(val)}
+            onChangeText={val => searchUser(val)}
           />
         </View>
         <View
@@ -245,7 +263,7 @@ const AllUsers = ({navigation}, props,) => {
             height: 55,
             borderRadius: 5,
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>navigation.navigate('GroupChat')}>
             <Image
               style={{
                 justifyContent: 'center',
@@ -256,6 +274,7 @@ const AllUsers = ({navigation}, props,) => {
               }}
               source={require('../../Assets/+.png')}
             />
+
           </TouchableOpacity>
         </View>
       </View>

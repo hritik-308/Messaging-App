@@ -32,11 +32,13 @@ const MsgComponent = (props) => {
                 <Text style={{ paddingLeft: 5, color:  sender ? COLORS.white : COLORS.black,fontFamily:FONTS.Regular,fontSize:12.5 }}>
                     {item.message}
                 </Text>
-
+                <View style={{flexDirection:'row'}}>
                 <TimeDelivery
                     sender={sender}
                     item={item}
                 />
+                <Text>✓✓</Text>
+                </View>
             </View>
         </Pressable>
     );

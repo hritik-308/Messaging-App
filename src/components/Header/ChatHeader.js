@@ -22,11 +22,11 @@ const ChatHeader = (props,{navigation}) => {
             <Icon
                 style={{
                     marginHorizontal: 10,
-                    color: COLORS.white,
+                    color: COLORS.black,
                 }}
                 name = "chevron-back"
                 type = "Ionicons"
-                onPress = {() => navigation.goback()}
+                onPress = {() => props.navigation.goback()}
             />
             <Avatar
                source = {{uri: data.img}} 

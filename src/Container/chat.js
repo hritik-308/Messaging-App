@@ -1,38 +1,57 @@
-import {View, Text, Image, TouchableOpacity,SafeAreaView, ActivityIndicator,StyleSheet,FlatList,TextInput} from 'react-native';
-import React,{ useState, useCallback, useEffect} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+  StyleSheet,
+  FlatList,
+  TextInput,
+} from 'react-native';
+import React, {useState, useCallback, useEffect} from 'react';
 import AllUsers from './allUsers';
-import { GiftedChat } from 'react-native-gifted-chat'
-import { useSelector } from 'react-redux';
-import { firebase } from '@react-native-firebase/database';
+import {GiftedChat} from 'react-native-gifted-chat';
+import {useDispatch, useSelector} from 'react-redux';
+import {firebase} from '@react-native-firebase/database';
 import MsgComponent from '../components/Chat/MsgComponent';
 import {COLORS} from '../components/constants/colors';
-import { Icon } from 'native-base';
+import {Center, Icon} from 'native-base';
 import moment from 'moment';
-import ChatHeader from '../components/Header/ChatHeader'
-
+import ChatHeader from '../components/Header/ChatHeader';
+import SimpleToast from 'react-native-simple-toast';
+import { lstmsg } from '../redux/reducer/user';
 
 const Chat = (props, {navigation}) => {
 
-  const {userData} = useSelector(state => state.User)
-  const {receiverData} = props.route.params
-  console.log('weee==============>',receiverData);
-  const [messages, setMessages] = useState([]);
+
+
+  const dispatch=useDispatch();
+
+
+  const {userData} = useSelector(state => state.User);
+  const {receiverData} = props.route.params;
+const {lstms}=receiverData.lastMsg
+  console.log('weee==============>', lstms);
+  // const [messages, setMessages] = useState([]);
   const [msg, setMsg] = React.useState('');
   const [disabled, setdisabled] = React.useState(false);
   const [allChat, setallChat] = React.useState([]);
 
-
   useEffect(() => {
-    const onChildAdd = 
-    firebase 
-    .database()
-      .ref('/messages/'+ receiverData.roomId)
+    const onChildAdd = firebase
+      .database()
+      .ref('/messages/' + receiverData.roomId)
       .on('child_added', snapshot => {
         // console.log('A new node has been added', snapshot.val());
-        setallChat((state) => [snapshot.val(),...state]);
+        setallChat(state => [snapshot.val(), ...state]);
       });
     // Stop listening for updates when no longer required
-    return () => firebase.database().ref('/messages'+ receiverData.roomId).off('child_added', onChildAdd);
+    return () =>
+      firebase
+        .database()
+        .ref('/messages' + receiverData.roomId)
+        .off('child_added', onChildAdd);
   }, []);
 
   const msgvalid = txt => txt && txt.replace(/\s/g, '').length;
@@ -52,7 +71,8 @@ const Chat = (props, {navigation}) => {
       msgType: 'text',
     };
 
-    const newReference = firebase.database()
+    const newReference = firebase
+      .database()
       .ref('/messages/' + receiverData.roomId)
       .push();
     msgData.id = newReference.key;
@@ -62,29 +82,66 @@ const Chat = (props, {navigation}) => {
         sendTime: msgData.sendTime,
       };
       firebase
-      .database()
+        .database()
         .ref('/chatlist/' + receiverData?.id + '/' + userData?.id)
         .update(chatListupdate)
-        .then(() => console.log('Data updated.'));
-      console.log("'/chatlist/' + userData?.id + '/' + data?.id",receiverData)
+        .then(() => console.log('Data updated.'))
+        // .then(()=>dispatch(lstmsg(receiverData.lastMsg)))
+      console.log("'/chatlist/' + userData?.id + '/' + data?.id", receiverData);
       firebase
-      .database()
+        .database()
         .ref('/chatlist/' + userData?.id + '/' + receiverData?.id)
         .update(chatListupdate)
-        .then(() => console.log('Data updated.'));
+        .then(() => console.log('Data updated.'))
+        // .then(()=>dispatch(lstmsg(receiverData.lastMsg)))
 
       setMsg('');
       setdisabled(false);
     });
   };
 
-
   return (
     <View style={styles.container}>
-      <ChatHeader data={receiverData} />
+      {/* <ChatHeader data={receiverData} /> */}
       <View
-        
-        style={{flex: 1}}>
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          marginTop: 30,
+          alignItems: 'center',
+        }}>
+        <TouchableOpacity
+          style={{marginLeft: -20}}
+          onPress={() => props.navigation.goBack()}>
+          <Image source={require('../../Assets/leftarrow.png')} />
+        </TouchableOpacity>
+        <View style={{flexDirection: 'column', marginTop: -15}}>
+          <Image
+            style={{
+              height: 50,
+              width: 50,
+              backgroundColor: '#000',
+              borderRadius: 50,
+              marginLeft: 10,
+            }}
+            source={{
+              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_dh9ayOD6Z3q8Beu01vHFIU07lOzegKMTFjCrxDipAg&s',
+            }}
+          />
+          <Text style={{fontWeight: '800', fontSize: 20, marginTop: 5}}>
+            {receiverData.Name}
+          </Text>
+        </View>
+
+        <TouchableOpacity onPress={() => props.navigation.navigate('Profile')}>
+          <Image source={require('../../Assets/Vector.png')} />
+        </TouchableOpacity>
+      </View>
+      <Image
+        style={{marginTop: 20, marginLeft: 20}}
+        source={require('../../Assets/Line.png')}
+      />
+      <View style={{flex: 1}}>
         <FlatList
           style={{flex: 1}}
           data={allChat}
@@ -93,10 +150,7 @@ const Chat = (props, {navigation}) => {
           inverted
           renderItem={({item}) => {
             return (
-              <MsgComponent
-                sender={item.from == userData.id}
-                item={item}
-              />
+              <MsgComponent sender={item.from == userData.id} item={item} />
             );
           }}
         />
@@ -138,8 +192,10 @@ const Chat = (props, {navigation}) => {
             name="paper-plane-sharp"
             type="Ionicons"
           /> */}
-          <Image source={require('../../Assets/send.png')}
-        style={{width:30,height:30}}/>
+          <Image
+            source={require('../../Assets/send.png')}
+            style={{width: 30, height: 30}}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -155,12 +211,6 @@ const styles = StyleSheet.create({
 
 //make this component available to the app
 export default Chat;
-
-
-
-
-
-
 
 //   useEffect(() => {
 //     setMessages([
@@ -193,7 +243,7 @@ export default Chat;
 //       }}>
 //       <TouchableOpacity  style={{marginLeft:-20}} onPress={() => props.navigation.goBack()}>
 //         <Image
-         
+
 //           source={require('../../Assets/leftarrow.png')}
 //         />
 //       </TouchableOpacity>
@@ -204,13 +254,12 @@ export default Chat;
 
 //       <TouchableOpacity onPress={() => alert('hello')}>
 //         <Image
-          
+
 //           source={require('../../Assets/Vector.png')}
 //         />
 //       </TouchableOpacity>
-//     </View> 
-    
-    
+//     </View>
+
 //          </SafeAreaView>
 //         <GiftedChat
 //         messages={messages}
@@ -222,6 +271,5 @@ export default Chat;
 //          </>
 //     );
 //   };
-    
 
 // export default Chat;

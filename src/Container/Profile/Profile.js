@@ -12,7 +12,6 @@ import { Formik } from 'formik';
 import AllUsers from '../allUsers';
 
 
-
 export default function Profile ({navigation}) {
 
     const [downloadurl, setDownloadurl] = useState("https://reactjs.org/logo-og.png")
@@ -53,19 +52,24 @@ export default function Profile ({navigation}) {
     // Create user in rnFirebase
       const createUser = async (values) => {
     const usersData = {
-      id: uuid.v4(),
-      Name: Name,
+      // id: uuid.v4(),
+      // Name: Name,
       img:downloadurl,
-      phoneNumber: props.route.params.phoneNumber,
+      // phoneNumber: props.route.params.phoneNumber,
     };
     const newReference = firebase.database().ref('/users/' + usersData.id);
     //Creating refernce in rnFirebase
     newReference
       .set(usersData)
       .then(() => console.log('Data updated.'))
-      .then(() => dispatch(setUser(usersData)));
-    // .then(() => navigation.navigate('Chat'));
-  };
+      .then(() => dispatch(setUser(usersData)))
+      .then(() =>navigation.navigate('AllUsers'))
+  // const Nav =()=>{
+  //   handleSubmit
+  //   createUser()
+  //   navigation.navigate('AllUsers')
+    
+  // }
     
     return (
       <Formik
@@ -99,7 +103,7 @@ export default function Profile ({navigation}) {
           
          <View>
 
-            <Text style={styles.Texts}>Enter Name :</Text>
+            {/* <Text style={styles.Texts}>Enter Name :</Text>
             <TextInput
               style={styles.input}
               placeholder="John Cena"
@@ -112,11 +116,11 @@ export default function Profile ({navigation}) {
             />
             {(errors.name && touched.name) && 
               <Text style={styles.ErrorText}>{errors.name}</Text>
-            }
+            } */}
 
 
            
-            <TouchableOpacity  onPress={()=>navigation.navigate(AllUsers) (handleSubmit)}>
+            <TouchableOpacity  onPress={handleSubmit}>
           
               <View style={styles.button}>
                 <Text style={{color:'white'}}>Create User</Text>
@@ -210,120 +214,4 @@ const styles = StyleSheet.create({
     marginBottom:100
   }
  });
-
-
-
-
-
- {/* <Text  style={styles.Texts}>Enter Mobile :</Text>
-            <TextInput
-              style={styles.input}
-              maxLength={13}
-              placeholder="9918745589"
-              keyboardType="phone-pad"
-              // value={phone}
-              // onChangeText={number => setPhone(number)}
-              onChangeText={handleChange('phone')}
-              onBlur={handleBlur('phone')}
-              value={values.phone}
-            />
-            {(errors.phone && touched.phone) && 
-              <Text style={styles.ErrorText}>{errors.phone}</Text>
-            } */}
-
-
-
-            {/* <Text  style={styles.Texts}>Enter E-mail :</Text>
-            <TextInput
-              style={styles.input}
-              autoCapitalize='none'
-              placeholder="YashDubey.Official@gemail.com"
-              keyboardType="email-address"
-              // value={email}
-              // onChangeText={text => setEmail(text)}
-              onChangeText={handleChange('email')}
-              onBlur={handleBlur('email')}
-              value={values.email}
-            />
-            {(errors.email && touched.email) && 
-              <Text style={styles.ErrorText}>{errors.email}</Text>
-            }
-
-
-            <Text  style={styles.Texts}>Enter Password :</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Yash@123#"
-              keyboardType="default"
-              secureTextEntry
-              // onChangeText={text => setPassword(text)}
-              // value={password}
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              value={values.password}
-            />
-            {(errors.password && touched.password) && 
-              <Text style={styles.ErrorText}>{errors.password}</Text>
-            } */}
-
-
-
-
-
-
-// import {View, Text, TouchableOpacity} from 'react-native';
-// import React from 'react';
-// import auth from '@react-native-firebase/auth';
-// import PhoneInput from 'react-native-phone-number-input';
-// import Chat from '../Container/chat';
-// import AllUsers from '../Container/allUsers';
-// import { firebase } from '@react-native-firebase/database';
-// import uuid from 'react-native-uuid'
-// import { useDispatch, useSelector } from 'react-redux';
-// import SimpleToast from 'react-native-simple-toast';
-// import {setUser} from '../redux/reducer/user'
-
-// const Profile = props => {
-//   const createUser = async () => {
-//     const usersData = {
-//       id: uuid.v4(),
-//       Name: Name,
-//       phoneNumber: props.route.params.phoneNumber,
-//     };
-//     const newReference = firebase.database().ref('/users/' + usersData.id);
-//     //Creating refernce in rnFirebase
-//     newReference
-//       .set(usersData)
-//       .then(() => console.log('Data updated.'))
-//       .then(() => dispatch(setUser(usersData)));
-//     // .then(() => navigation.navigate('Chat'));
-//   };
-//   return (
-//     <View>
-//       <View style={{flexDirection: 'row', marginRight: 50}}>
-//         <Text
-//           style={{
-//             marginRight: 60,
-//             marginTop: 15,
-//             fontWeight: 'bold',
-//             fontSize: 20,
-//             color: '#000',
-//           }}>
-//           Name :
-//         </Text>
-//         <TextInput
-//           onChangeText={text => setName(text)}
-//           value={values.Name}
-//           placeholder="Enter Your Name"
-//           withShadow
-//           autoFocus
-//         />
-//       </View>
-//       <TouchableOpacity onPress={()=>navigation.navigate('AllUsers')}>
-//       <Text>Continue</Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
-
-// export default Profile;
+}

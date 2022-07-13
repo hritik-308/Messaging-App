@@ -37,7 +37,7 @@ const MsgComponent = (props) => {
                     sender={sender}
                     item={item}
                 />
-                <Text>✓✓</Text>
+                {/* <Text>✓✓</Text> */}
                 </View>
             </View>
         </Pressable>

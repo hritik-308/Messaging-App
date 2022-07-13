@@ -13,80 +13,83 @@ import {
 import {useSelector} from 'react-redux';
 import uuid from 'react-native-uuid';
 
-const data = [
-  {
-    id: 1,
-    pic: require('../../Assets/user.png'),
-    name: 'Benjamin',
-    time: '12:34',
-  },
-  {
-    id: 2,
-    pic: require('../../Assets/user.png'),
-    name: 'Harry',
-    time: '12:34',
-  },
-  {
-    id: 3,
-    pic: require('../../Assets/user.png'),
-    name: 'Joe',
-    time: '12:34',
-  },
-  {
-    id: 4,
-    pic: require('../../Assets/user.png'),
-    name: 'Benjamin Franklin',
-    time: '12:34',
-  },
-  {
-    id: 5,
-    pic: require('../../Assets/user.png'),
-    name: 'Jacob',
-    time: '12:34',
-  },
-  {
-    id: 6,
-    pic: require('../../Assets/user.png'),
-    name: 'Andrew',
-    time: '12:34',
-  },
-  {
-    id: 7,
-    pic: require('../../Assets/user.png'),
-    name: 'mitchell',
-    time: '12:34',
-  },
-  {
-    id: 8,
-    pic: require('../../Assets/user.png'),
-    name: 'steve',
-    time: '12:34',
-  },
-  {
-    id: 9,
-    pic: require('../../Assets/user.png'),
-    name: 'steve',
-    time: '12:34',
-  },
-  {
-    id: 10,
-    pic: require('../../Assets/user.png'),
-    name: 'william',
-    time: '12:34',
-  },
-  {
-    id: 11,
-    pic: require('../../Assets/user.png'),
-    name: 'jeff',
-    time: '12:34',
-  },
-];
-const AllUsers = ({navigation}, props,data) => {
+// const data = [
+//   {
+//     id: 1,
+//     pic: require('../../Assets/user.png'),
+//     name: 'Benjamin',
+//     time: '12:34',
+//   },
+//   {
+//     id: 2,
+//     pic: require('../../Assets/user.png'),
+//     name: 'Harry',
+//     time: '12:34',
+//   },
+//   {
+//     id: 3,
+//     pic: require('../../Assets/user.png'),
+//     name: 'Joe',
+//     time: '12:34',
+//   },
+//   {
+//     id: 4,
+//     pic: require('../../Assets/user.png'),
+//     name: 'Benjamin Franklin',
+//     time: '12:34',
+//   },
+//   {
+//     id: 5,
+//     pic: require('../../Assets/user.png'),
+//     name: 'Jacob',
+//     time: '12:34',
+//   },
+//   {
+//     id: 6,
+//     pic: require('../../Assets/user.png'),
+//     name: 'Andrew',
+//     time: '12:34',
+//   },
+//   {
+//     id: 7,
+//     pic: require('../../Assets/user.png'),
+//     name: 'mitchell',
+//     time: '12:34',
+//   },
+//   {
+//     id: 8,
+//     pic: require('../../Assets/user.png'),
+//     name: 'steve',
+//     time: '12:34',
+//   },
+//   {
+//     id: 9,
+//     pic: require('../../Assets/user.png'),
+//     name: 'steve',
+//     time: '12:34',
+//   },
+//   {
+//     id: 10,
+//     pic: require('../../Assets/user.png'),
+//     name: 'william',
+//     time: '12:34',
+//   },
+//   {
+//     id: 11,
+//     pic: require('../../Assets/user.png'),
+//     name: 'jeff',
+//     time: '12:34',
+//   },
+// ];
+const AllUsers = ({navigation}, props, data) => {
   //  const {userData} =useSelector(state=>state.User)
   // console.log('ndiobnce=====>',props)
   const [allUser, setallUser] = useState([]);
   const [allUserBackup, setallUserBackup] = useState([]);
   const [filterUser, setfilterUser] = useState([]);
+  const [search, setSearch] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+  // const [time,setTime]=useState();
 
   const {userData} = useSelector(state => state.User);
   // const lastmes=props.route.params.lstms
@@ -97,7 +100,7 @@ const AllUsers = ({navigation}, props,data) => {
 
   useEffect(() => {
     getAllUser();
-    chlist()       
+    chlist();
     // console.log(allUser);
   }, []);
 
@@ -107,7 +110,7 @@ const AllUsers = ({navigation}, props,data) => {
       .ref('/users/')
       .once('value')
       .then(snapshot => {
-        // console.log('alluser Data:', Object.values(snapshot.val()));
+        // console.log('alluser Data:', userData);
         setallUser(
           Object.values(snapshot.val()).filter(it => it.id !== userData.id),
         );
@@ -122,15 +125,23 @@ const AllUsers = ({navigation}, props,data) => {
       .ref('/chatlist/')
       .once('value')
       .then(snapshot => {
-        console.log(snapshot)
-        // console.log('clist Data:',  Object.values(Object.values(snapshot.val()))[0]);
+        console.log(snapshot);
+    const {time}=   Object.values(Object.values(snapshot.val())).map(item => {
+          Object.values(item).map(time=>{
+            console.log(time.sendTime)
+          })
+        });
       });
   };
-  // const searchUser=(val)=>{
-  //   setResult(val);
-  //   setallUserBackup(allUser.filter((it)=>it.Name.match(val)))
-
-  // }
+  const SearchBtn =
+    // alert(search)
+    allUser.filter(val => {
+      if (search == '') {
+        return val;
+      } else if (val.Name.toLowerCase().includes(search.toLowerCase())) {
+        return val;
+      }
+    });
 
   const createChatList = data => {
     firebase
@@ -154,8 +165,8 @@ const AllUsers = ({navigation}, props,data) => {
           firebase
             .database()
             .ref('/chatlist/' + data.id + '/' + userData.id)
-            .update(myData)
-            // .then(() => console.log('Data updated.'));
+            .update(myData);
+          // .then(() => console.log('Data updated.'));
 
           // delete data['password'];
           data.lastMsg = '';
@@ -163,8 +174,8 @@ const AllUsers = ({navigation}, props,data) => {
           firebase
             .database()
             .ref('/chatlist/' + userData.id + '/' + data.id)
-            .update(data)
-            // .then(() => console.log('Data updated.'));
+            .update(data);
+          // .then(() => console.log('Data updated.'));
 
           navigation.navigate('Chat', {receiverData: data});
         } else {
@@ -191,7 +202,9 @@ const AllUsers = ({navigation}, props,data) => {
             borderColor: '#2994FF',
           }}>
           <Image
-            source={{uri: item.img}}
+            source={{
+              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_dh9ayOD6Z3q8Beu01vHFIU07lOzegKMTFjCrxDipAg&s',
+            }}
             style={{
               justifyContent: 'flex-start',
               height: 40,
@@ -204,9 +217,9 @@ const AllUsers = ({navigation}, props,data) => {
         <TouchableOpacity onPress={() => chatList()}>
           <View style={{marginLeft: 40}}>
             <Text style={{fontWeight: 'bold'}}>{item.Name}</Text>
-            <View>
-              <Text style={{color: '#000'}}>{item.lastMsg}</Text>
-            </View>
+            {/* <View>
+              <Text style={{color: '#000'}}>{chlist()}</Text>
+            </View> */}
           </View>
           <View style={{marginLeft: 250, flexDirection: 'row'}}>
             <Text style={{color: '#000'}}>5:11</Text>
@@ -249,8 +262,10 @@ const AllUsers = ({navigation}, props,data) => {
           <TextInput
             style={{flexWrap: 'wrap', flex: 1, borderWidth: 1}}
             placeholder="Search"
-            value={result}
-            onChangeText={val => searchUser(val)}
+            value={search}
+            onChangeText={text => {
+              setSearch(text);
+            }}
           />
         </View>
         <View
@@ -263,7 +278,7 @@ const AllUsers = ({navigation}, props,data) => {
             height: 55,
             borderRadius: 5,
           }}>
-          <TouchableOpacity onPress={()=>navigation.navigate('GroupChat')}>
+          <TouchableOpacity onPress={() => navigation.navigate('GroupChat')}>
             <Image
               style={{
                 justifyContent: 'center',
@@ -274,14 +289,13 @@ const AllUsers = ({navigation}, props,data) => {
               }}
               source={require('../../Assets/+.png')}
             />
-
           </TouchableOpacity>
         </View>
       </View>
       <View>
         <FlatList
           nestedScrollEnabled
-          data={allUser}
+          data={SearchBtn}
           renderItem={renderItem}
           showsHorizontalScrollIndicator={false}
         />

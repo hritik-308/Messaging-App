@@ -32,7 +32,7 @@ const Chat = (props, {navigation}) => {
   const {userData} = useSelector(state => state.User);
   const {receiverData} = props.route.params;
 const {lstms}=receiverData.lastMsg
-  console.log('weee==============>', lstms);
+  // console.log('weee==============>', lstms);
   // const [messages, setMessages] = useState([]);
   const [msg, setMsg] = React.useState('');
   const [disabled, setdisabled] = React.useState(false);
@@ -133,7 +133,7 @@ const {lstms}=receiverData.lastMsg
           </Text>
         </View>
 
-        <TouchableOpacity onPress={() => props.navigation.navigate('Profile')}>
+        <TouchableOpacity onPress={()=>props.navigation.navigate('Profile') }>
           <Image source={require('../../Assets/Vector.png')} />
         </TouchableOpacity>
       </View>

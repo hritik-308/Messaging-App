@@ -12,10 +12,11 @@ import { Formik } from 'formik';
 import AllUsers from '../allUsers';
 
 
-export default function Profile ({navigation}) {
+export default function Profile ({navigation},props) {
 
     const [downloadurl, setDownloadurl] = useState("https://reactjs.org/logo-og.png")
-
+    const {data}=props
+    console.log('hlw==========>>>>>>',data)
 
     //open library and upload pic to firebase
     const pickImageAndUpload = ()=>{
@@ -49,27 +50,7 @@ export default function Profile ({navigation}) {
       
     }); 
 
-    // Create user in rnFirebase
-      const createUser = async (values) => {
-    const usersData = {
-      // id: uuid.v4(),
-      // Name: Name,
-      img:downloadurl,
-      // phoneNumber: props.route.params.phoneNumber,
-    };
-    const newReference = firebase.database().ref('/users/' + usersData.id);
-    //Creating refernce in rnFirebase
-    newReference
-      .set(usersData)
-      .then(() => console.log('Data updated.'))
-      .then(() => dispatch(setUser(usersData)))
-      .then(() =>navigation.navigate('AllUsers'))
-  // const Nav =()=>{
-  //   handleSubmit
-  //   createUser()
-  //   navigation.navigate('AllUsers')
     
-  // }
     
     return (
       <Formik
@@ -100,10 +81,10 @@ export default function Profile ({navigation}) {
 
             </View>
       </View>
-          
+      <Text style={styles.Texts}>Name :{}</Text>
+{/*           
          <View>
 
-            {/* <Text style={styles.Texts}>Enter Name :</Text>
             <TextInput
               style={styles.input}
               placeholder="John Cena"
@@ -120,14 +101,8 @@ export default function Profile ({navigation}) {
 
 
            
-            <TouchableOpacity  onPress={handleSubmit}>
-          
-              <View style={styles.button}>
-                <Text style={{color:'white'}}>Create User</Text>
-              </View>
-
-            </TouchableOpacity>
-         </View>
+            
+         {/* </View>  */}
        
          </ScrollView>
          )}
@@ -214,4 +189,3 @@ const styles = StyleSheet.create({
     marginBottom:100
   }
  });
-}

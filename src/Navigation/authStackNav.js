@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AllUsers from '../Container/allUsers';
 import Profile from '../Container/Profile/Profile';
 import GroupChat from '../Container/GroupChat';
+import ChatList from '../Container/ChatList';
+import Groups from '../Container/Groups';
 const Stack = createNativeStackNavigator();
 export default function StackNavigation() {
   
@@ -27,6 +29,8 @@ export default function StackNavigation() {
       <Stack.Screen name="Chat" component={Chat}  options={{headerShown:false}} />
       <Stack.Screen name="Profile" component={Profile}  options={{headerShown:false}} />
       <Stack.Screen name="GroupChat" component={GroupChat}  options={{headerShown:false}} />
+      <Stack.Screen name="ChatList" component={ChatList}  options={{headerShown:false}} />
+      <Stack.Screen name="Groups" component={Groups}  options={{headerShown:false}} />
       
       
 

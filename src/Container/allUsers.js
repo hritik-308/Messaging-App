@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import uuid from 'react-native-uuid';
+import { Center } from 'native-base';
 
 // const data = [
 //   {
@@ -100,9 +101,9 @@ const AllUsers = ({navigation}, props, data) => {
 
   useEffect(() => {
     getAllUser();
-    chlist();
+    // chlist();
     // console.log(allUser);
-  }, []);
+  }, [allUser]);
 
   const getAllUser = () => {
     firebase
@@ -119,20 +120,7 @@ const AllUsers = ({navigation}, props, data) => {
         );
       });
   };
-  const chlist = () => {
-    firebase
-      .database()
-      .ref('/chatlist/')
-      .once('value')
-      .then(snapshot => {
-        console.log(snapshot);
-    const {time}=   Object.values(Object.values(snapshot.val())).map(item => {
-          Object.values(item).map(time=>{
-            console.log(time.sendTime)
-          })
-        });
-      });
-  };
+  
   const SearchBtn =
     // alert(search)
     allUser.filter(val => {
@@ -299,6 +287,9 @@ const AllUsers = ({navigation}, props, data) => {
           renderItem={renderItem}
           showsHorizontalScrollIndicator={false}
         />
+        <TouchableOpacity style={{marginTop:380,justifyContent:'center',marginLeft:140}} onPress={()=>navigation.navigate('ChatList')}>
+          <Text>ChatList</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

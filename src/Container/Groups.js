@@ -8,44 +8,68 @@ import { useSelector } from 'react-redux';
 import { Button, ScrollView } from 'native-base';
 
 
-const Groups = () => {
+const Groups = ({navigation},props) => {
 
     const[groupName,setgroupName]=useState();
-    const [gData, setGData] = useState([])
+    const [data, setData] = useState([])
     const[nUsers,setnUsers]=useState();
     const[Array,setArray]=useState([]);
-    const [allGroups, setallAllGroups] = useState([]);
-  const [allUserBackup, setallUserBackup] = useState([]);
-  const [filterUser, setfilterUser] = useState([]);
   const [search, setSearch] = useState('');
   const {userData} = useSelector(state => state.User);
+  const GroupUsers=('hi=========>',data.map(item=>(item.groupId)))
 
-
-  //  console.log(Array)
-
+//  console.log(GroupUsers)
+//  const grpData=props.gData
+  // console.log('fii====---->',grpData)
   useEffect(() => {
-    getAllUser();
+    getAllGroups();
     // chlist();
     // console.log('hii================>>>>>>',allUser);
-  }, [allUser]);
+  }, []);
 
-    const getAllGroups = () => {
+    const getAllGroups =async () => {
       firebase
         .database()
         .ref('/Groups/')
+        .on('value', snapshot => {
+        
+          setData(Object.values(snapshot.val()));
+        });
+    };
+
+
+    const createGroupChat = data => {
+      firebase
+        .database()
+        .ref('/GroupChat/' )
         .once('value')
         .then(snapshot => {
-          // console.log('alluser Data:', userData);
-          setallUser(
-            Object.values(snapshot.val()),
-          );
-          setallUserBackup(
-            Object.values(snapshot.val()),
-          );
+          // console.log('User data: ', snapshot.val());
+  
+          if (snapshot.val() == null) {
+            let myData = {
+              GroupChatId:uuid.v4(),
+              GroupId:GroupUsers,
+              SenderId:userData.id,
+              msg:''
+
+            };
+            firebase
+            .database()
+            .ref('/GroupChat/' + data.id + '/' + userData.id)
+            .update(myData);
+           
+            navigation.navigate('GrpMessages', {GroupUsers: data});
+          } else {
+            navigation.navigate('GrpMessages', {GroupUsers: snapshot.val()});
+          }
         });
     };
     const renderItem=({item})=>{
-
+      const gchatList = () => {
+        createGroupChat(item);
+        // navigation.navigate('Chat', {Username: item.Name,chatroomId : data.roomId,userData:userData.id,recieverDatas:data.id,})
+      };
  
         return (
           <View style={{flexDirection: 'row', marginTop: 40}}>
@@ -58,7 +82,7 @@ const Groups = () => {
               }}>
               <Image
                 source={{
-                  uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_dh9ayOD6Z3q8Beu01vHFIU07lOzegKMTFjCrxDipAg&s',
+                  uri: 'https://media.gettyimages.com/photos/tesla-ceo-elon-musk-speaks-during-the-unveiling-of-the-new-tesla-y-picture-id1130598318?s=2048x2048',
                 }}
                 style={{
                   justifyContent: 'flex-start',
@@ -69,13 +93,13 @@ const Groups = () => {
                 }}
               />
             </View>
-            <TouchableOpacity onPress={setArray(item)}>
+            <TouchableOpacity onPress={()=>navigation.navigate('GrpMessages')}>
               <View style={{marginLeft: 40}}>
                 {/* {setArray(item)} */}
                 <Text style={{fontWeight: 'bold'}}>{item.groupName}</Text>
-                {/* <View>
-                  <Text style={{color: '#000'}}>{chlist()}</Text>
-                </View> */}
+                <View>
+                  <Text style={{color: '#000'}}>{item.groupDiscription}</Text>
+                </View>
               </View>
               <View style={{marginLeft: 250, flexDirection: 'row'}}>
                 <Text style={{color: '#000'}}>5:11</Text>
@@ -84,9 +108,18 @@ const Groups = () => {
           </View>
         );
       }
+  
   return (
     <View>
       <Text>Groups</Text>
+      <FlatList
+      data={data}
+      keyExtractor={item => item.id}
+      renderItem={item => renderItem(item)}
+      // horizontal={true}
+
+      showsHorizontalScrollIndicator={false}
+    />
     </View>
   )
 }

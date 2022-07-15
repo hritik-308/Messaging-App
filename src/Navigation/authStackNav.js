@@ -7,6 +7,7 @@ import Profile from '../Container/Profile/Profile';
 import GroupChat from '../Container/GroupChat';
 import ChatList from '../Container/ChatList';
 import Groups from '../Container/Groups';
+import GrpMessages from '../Container/GrpMessages';
 const Stack = createNativeStackNavigator();
 export default function StackNavigation() {
   
@@ -31,6 +32,8 @@ export default function StackNavigation() {
       <Stack.Screen name="GroupChat" component={GroupChat}  options={{headerShown:false}} />
       <Stack.Screen name="ChatList" component={ChatList}  options={{headerShown:false}} />
       <Stack.Screen name="Groups" component={Groups}  options={{headerShown:false}} />
+      <Stack.Screen name="GrpMessages" component={GrpMessages}  options={{headerShown:false}} />
+
       
       
 

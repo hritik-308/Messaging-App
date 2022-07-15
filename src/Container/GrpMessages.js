@@ -22,7 +22,7 @@ import ChatHeader from '../components/Header/ChatHeader';
 import SimpleToast from 'react-native-simple-toast';
 import { lstmsg } from '../redux/reducer/user';
 
-const Chat = (props, {navigation}) => {
+const GrpMessages = (props, {navigation}) => {
 
 
 
@@ -30,18 +30,19 @@ const Chat = (props, {navigation}) => {
 
 
   const {userData} = useSelector(state => state.User);
-  const {receiverData} = props.route.params;
-const {lstms}=receiverData.lastMsg
-  // console.log('weee==============>', lstms);
+  const GroupUsers = props.route.params;
+// const {lstms}=receiverData.lastMsg
+  // console.log('weee==============>', GroupUsers);
   // const [messages, setMessages] = useState([]);
   const [msg, setMsg] = React.useState('');
   const [disabled, setdisabled] = React.useState(false);
   const [allChat, setallChat] = React.useState([]);
+  const [data, setData] = useState([])
 
   useEffect(() => {
     const onChildAdd = firebase
       .database()
-      .ref('/messages/' + receiverData.roomId)
+      .ref('/messages/' + GroupUsers.roomId)
       .on('child_added', snapshot => {
         // console.log('A new node has been added', snapshot.val());
         setallChat(state => [snapshot.val(), ...state]);
@@ -50,7 +51,7 @@ const {lstms}=receiverData.lastMsg
     return () =>
       firebase
         .database()
-        .ref('/messages' + receiverData.roomId)
+        .ref('/messages' + GroupUsers.roomId)
         .off('child_added', onChildAdd);
   }, []);
 
@@ -63,17 +64,16 @@ const {lstms}=receiverData.lastMsg
     }
     setdisabled(true);
     let msgData = {
-      roomId: receiverData.roomId,
+      roomId: GroupUsers.roomId,
       message: msg,
       from: userData?.id,
-      to: receiverData.id,
       sendTime: moment().format(''),
       msgType: 'text',
     };
 
     const newReference = firebase
       .database()
-      .ref('/messages/' + receiverData.roomId)
+      .ref('/messages/' + GroupUsers.roomId)
       .push();
     msgData.id = newReference.key;
     newReference.set(msgData).then(() => {
@@ -83,14 +83,14 @@ const {lstms}=receiverData.lastMsg
       };
       firebase
         .database()
-        .ref('/chatlist/' + receiverData?.id + '/' + userData?.id)
+        .ref('/chatlist/' + GroupUsers?.id + '/' + userData?.id)
         .update(chatListupdate)
         // .then(() => console.log('Data updated.'))
         // .then(()=>dispatch(lstmsg(receiverData.lastMsg)))
-      console.log("'/chatlist/' + userData?.id + '/' + data?.id", receiverData);
+      // console.log("'/chatlist/' + userData?.id + '/' + data?.id", receiverData);
       firebase
         .database()
-        .ref('/chatlist/' + userData?.id + '/' + receiverData?.id)
+        .ref('/chatlist/' + userData?.id + '/' + GroupUsers?.id)
         .update(chatListupdate)
         // .then(() => console.log('Data updated.'))
         // .then(()=>dispatch(lstmsg(receiverData.lastMsg)))
@@ -125,11 +125,12 @@ const {lstms}=receiverData.lastMsg
               marginLeft: 10,
             }}
             source={{
-              uri: 'https://media.gettyimages.com/photos/tesla-ceo-elon-musk-speaks-during-the-unveiling-of-the-new-tesla-y-picture-id1130598318?s=2048x2048',
+              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_dh9ayOD6Z3q8Beu01vHFIU07lOzegKMTFjCrxDipAg&s',
             }}
           />
           <Text style={{fontWeight: '800', fontSize: 20, marginTop: 5}}>
-            {receiverData.Name}
+            {/* {GroupUsers.groupName} */}
+            hiii
           </Text>
         </View>
 
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default Chat;
+export default GrpMessages;
 
 //   useEffect(() => {
 //     setMessages([

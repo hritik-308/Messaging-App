@@ -191,7 +191,7 @@ const AllUsers = ({navigation}, props, data) => {
           }}>
           <Image
             source={{
-              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_dh9ayOD6Z3q8Beu01vHFIU07lOzegKMTFjCrxDipAg&s',
+              uri: 'https://media.gettyimages.com/photos/tesla-ceo-elon-musk-speaks-during-the-unveiling-of-the-new-tesla-y-picture-id1130598318?s=2048x2048',
             }}
             style={{
               justifyContent: 'flex-start',
@@ -287,7 +287,7 @@ const AllUsers = ({navigation}, props, data) => {
           renderItem={renderItem}
           showsHorizontalScrollIndicator={false}
         />
-        <TouchableOpacity style={{marginTop:380,justifyContent:'center',marginLeft:140}} onPress={()=>navigation.navigate('ChatList')}>
+        <TouchableOpacity style={{marginTop:380,justifyContent:'center',marginLeft:140}} onPress={()=>navigation.navigate('ChatList' , {receiverData: data})}>
           <Text>ChatList</Text>
         </TouchableOpacity>
       </View>

@@ -4,11 +4,11 @@ import { firebase } from '@react-native-firebase/database';
 import { useSelector } from 'react-redux';
 import { FlatList } from 'native-base';
 
-const ChatList = () => {
+const ChatList = ({navigation}) => {
 
     const {userData} = useSelector(state => state.User);
 
-  console.log("userData",userData);
+  // console.log("userData",userData);
 
   const [chatList, setchatList] = useState([]);
 
@@ -33,6 +33,50 @@ const ChatList = () => {
     });
   
   }
+
+
+
+
+  const createChatList = data => {
+    firebase
+      .database()
+      .ref('/chatlist/' + userData.id + '/' + data.id)
+      .once('value')
+      .then(snapshot => {
+        // console.log('User data: ', snapshot.val());
+
+        if (snapshot.val() == null) {
+          let roomId = uuid.v4();
+          let myData = {
+            roomId,
+            id: userData.id,
+            Name: userData.Name,
+            phoneNumber: userData.phoneNumber,
+            img: userData.img,
+            about: userData.about,
+            lastMsg: '',
+          };
+          firebase
+            .database()
+            .ref('/chatlist/' + data.id + '/' + userData.id)
+            .update(myData);
+          // .then(() => console.log('Data updated.'));
+
+          // delete data['password'];
+          data.lastMsg = '';
+          data.roomId = roomId;
+          firebase
+            .database()
+            .ref('/chatlist/' + userData.id + '/' + data.id)
+            .update(data);
+          // .then(() => console.log('Data updated.'));
+
+          navigation.navigate('Chat', {receiverData: data});
+        } else {
+          navigation.navigate('Chat', {receiverData: snapshot.val()});
+        }
+      });
+  };
   const renderItem = ({item}) => {
     const chatList = () => {
       createChatList(item);
@@ -51,7 +95,7 @@ const ChatList = () => {
           }}>
           <Image
             source={{
-              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_dh9ayOD6Z3q8Beu01vHFIU07lOzegKMTFjCrxDipAg&s',
+              uri: 'https://media.gettyimages.com/photos/tesla-ceo-elon-musk-speaks-during-the-unveiling-of-the-new-tesla-y-picture-id1130598318?s=2048x2048',
             }}
             style={{
               justifyContent: 'flex-start',

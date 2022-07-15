@@ -20,7 +20,7 @@ const GroupChat = ({navigation},values,) => {
   const [allUserBackup, setallUserBackup] = useState([]);
   const [filterUser, setfilterUser] = useState([]);
   const [search, setSearch] = useState('');
-  const {userData} = useSelector(state => state.User);
+  const {GroupDatas} = useSelector(state => state.Group);
 
 
   //  console.log(Array)
@@ -39,10 +39,10 @@ const GroupChat = ({navigation},values,) => {
         .then(snapshot => {
           // console.log('alluser Data:', userData);
           setallUser(
-            Object.values(snapshot.val()).filter(it => it.id !== userData.id),
+            Object.values(snapshot.val()).filter(it => it.id !== GroupDatas.id),
           );
           setallUserBackup(
-            Object.values(snapshot.val()).filter(it => it.id !== userData.id),
+            Object.values(snapshot.val()).filter(it => it.id !== GroupDatas.id),
           );
         });
     };
@@ -57,72 +57,48 @@ const GroupChat = ({navigation},values,) => {
           
         }
       });
- const renderItem=({item})=>{
 
- 
-      return (
-        <View style={{flexDirection: 'row', marginTop: 40}}>
-          <View
-            style={{
-              marginLeft: 20,
-              borderRadius: 80,
-              borderWidth: 4,
-              borderColor: '#2994FF',
-            }}>
-            <Image
-              source={{
-                uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_dh9ayOD6Z3q8Beu01vHFIU07lOzegKMTFjCrxDipAg&s',
-              }}
-              style={{
-                justifyContent: 'flex-start',
-                height: 40,
-                width: 40,
-                borderRadius: 80,
-                borderWidth: 5,
-              }}
-            />
-          </View>
-          <TouchableOpacity onPress={setArray(item)}>
-            <View style={{marginLeft: 40}}>
-              {setArray(item)}
-              <Text style={{fontWeight: 'bold'}}>{item.Name}</Text>
-              {/* <View>
-                <Text style={{color: '#000'}}>{chlist()}</Text>
-              </View> */}
-            </View>
-            <View style={{marginLeft: 250, flexDirection: 'row'}}>
-              <Text style={{color: '#000'}}>5:11</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      );
-    }
+      useEffect(() => {
+        readUserData();
+      }, []);
+    
+      //ReadUser data from rnFirebase realtime DB
+      let readUserData = async () => {
+        database()
+          .ref('/Groups/')
+          .on('value', snapshot => {
+            
+            setGrpUsers(Object.values(snapshot.val()));
+          });
+      };
 
 
     const CreateGroup=()=>{
-
+      let roomId = uuid.v4();
         const GroupData = {
+            roomId,
             groupId:uuid.v4(),
             groupName: groupName,
             groupDiscription:groupDiscription,
-            users:allUser,
-            userrsName:userData.Name
+            usersData:{
+              UsersId:uuid.v4(),
+              users: allUser
+            },
+            userrsName:GroupDatas.groupName
           };
           const newReference = firebase.database().ref('/Groups/' +GroupData.groupId);
           //Creating refernce in rnFirebase
           newReference
             .set(GroupData)
-            .then(() => console.log('Data updated.'))
+            // .then(() => console.log('Data updated.'))
             .then(() => dispatch(setGroup(GroupData)))
     }
 
     const addGroup =()=>{
         CreateGroup()
-        navigation.navigate('AllUsers' ,{GroupData:gData} )
+        navigation.navigate('Groups' ,{GroupData:gData} )
 
     }
-
-
 
   return (
     <ScrollView>

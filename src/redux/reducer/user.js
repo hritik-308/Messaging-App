@@ -20,13 +20,10 @@ export const userSlice = createSlice({
       const lastmsg=action.payload;
       return{...state,lastmessage}
     },
-    setGroup(state,action) {
-      const group = action.payload;
-      return {...state, groupData:group,login:true}
-    },
+   
   }
 })
 
-export const {  setUser, removeUser , lstmsg ,setGroup} = userSlice.actions;
+export const {  setUser, removeUser , lstmsg } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -8,11 +8,16 @@ import TimeDelivery from './TimeDelivery';
 const MsgComponent = (props) => {
     const { sender, item, sendTime } = props;
 
+
+    // console.log('props',props)
     // console.log("item",item)
+    
+
     return (
         <Pressable
             style={{ marginVertical: 0 }}
         >
+            
             <View
                 style={[styles.TriangleShapeCSS,
                 sender ?
@@ -21,6 +26,7 @@ const MsgComponent = (props) => {
                     [styles.left]
                 ]}
             />
+
             <View
                 style={[styles.masBox, {
                     alignSelf: sender ? 'flex-end' : 'flex-start',
@@ -28,8 +34,10 @@ const MsgComponent = (props) => {
                     backgroundColor: sender ? '#2994FF' : "#707070"
                 }]}
             >
-
-                <Text style={{ paddingLeft: 5, color:  sender ? COLORS.white : COLORS.black,fontFamily:FONTS.Regular,fontSize:12.5 }}>
+                 <Text style={{ paddingLeft: 5, color:  sender ? COLORS.black : COLORS.white,fontFamily:FONTS.Regular,fontSize:12.5,fontSize:13,fontWeight:'bold' }}>
+                    {item.senderName}
+                </Text>
+                <Text style={{ paddingLeft: 5, color:  sender ? COLORS.black : COLORS.white,fontFamily:FONTS.Regular,fontSize:14,marginTop:4 }}>
                     {item.message}
                 </Text>
                 <View style={{flexDirection:'row'}}>
@@ -52,7 +60,7 @@ const styles = StyleSheet.create({
         maxWidth: '80%',
         paddingHorizontal: 10,
         marginVertical: 5,
-        paddingTop: 5,
+        paddingTop: 5,                                      
         borderRadius: 8
     },
     timeText: {

@@ -32,11 +32,8 @@ export default function StackNavigation() {
       <Stack.Screen name="GroupChat" component={GroupChat}  options={{headerShown:false}} />
       <Stack.Screen name="ChatList" component={ChatList}  options={{headerShown:false}} />
       <Stack.Screen name="Groups" component={Groups}  options={{headerShown:false}} />
-      <Stack.Screen name="GrpMessages" component={GrpMessages}  options={{headerShown:false}} />
-
+      <Stack.Screen name="GrpMessages" component={GrpMessages}  options={{headerShown:false}}/>
       
-      
-
     </Stack.Navigator>
   );
 }

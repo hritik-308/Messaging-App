@@ -1,16 +1,17 @@
-import { View, Text,Image,TouchableOpacity } from 'react-native'
+import { View, Text,Image,TouchableOpacity ,TextInput} from 'react-native'
 import React , {useState,useEffect} from 'react';
 import { firebase } from '@react-native-firebase/database';
 import { useSelector } from 'react-redux';
-import { FlatList } from 'native-base';
+import { FlatList, ScrollView } from 'native-base';
 
 const ChatList = ({navigation}) => {
 
     const {userData} = useSelector(state => state.User);
-
+    
   // console.log("userData",userData);
 
   const [chatList, setchatList] = useState([]);
+   const [search, setSearch] = useState('');
 
   useEffect(() => {
     getChatlist();
@@ -121,13 +122,75 @@ const ChatList = ({navigation}) => {
     );
   };
   return (
+    <ScrollView>
     <View>
-      <Text>ChatList</Text>
+    <View
+        style={{justifyContent: 'center', alignItems: 'center', marginTop: 5}}>
+        <Text style={{color: '#2994FF', fontWeight: 'bold', fontSize: 30}}>
+          Messages
+        </Text>
+      </View>
+      <View style={{flexDirection: 'row'}}>
+        <View
+          style={{
+            backgroundColor: '#f3f2f3',
+            overflow: 'hidden',
+            alignItems: 'center',
+            flexDirection: 'row',
+            height: 60,
+            width: '77%',
+            borderRadius: 6,
+            backgroundColor: '#f2f3f2',
+            marginHorizontal: 10,
+            marginVertical: 20,
+          }}>
+          <Image
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginHorizontal: 10,
+            }}
+            source={require('../../Assets/search.png')}
+          />
+          <TextInput
+            style={{flexWrap: 'wrap', flex: 1, borderWidth: 1}}
+            placeholder="Search"
+            value={search}
+            onChangeText={text => {
+              setSearch(text);
+            }}
+          />
+        </View>
+        <View
+          style={{
+            justifyContent: 'center',
+            marginLeft: 7,
+            marginTop: 22,
+            backgroundColor: '#2994FF',
+            width: 55,
+            height: 55,
+            borderRadius: 5,
+          }}>
+          <TouchableOpacity onPress={() => navigation.navigate('GroupChat')}>
+            <Image
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 20,
+                width: 20,
+                marginLeft: 18,
+              }}
+              source={require('../../Assets/+.png')}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
       <FlatList
       data={chatList}
       renderItem={renderItem}
       />
     </View>
+    </ScrollView>
   )
 }
 

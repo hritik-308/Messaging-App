@@ -23,18 +23,16 @@ import SimpleToast from 'react-native-simple-toast';
 import { lstmsg } from '../redux/reducer/user';
 
 const GrpMessages = (props, {navigation}) => {
-  
-  
-  
-  // console.log(props.route.params.groupName)
 
-  const dispatch=useDispatch();                           
+
+  console.log(props.route.params);
+
+  const dispatch=useDispatch();
 
 
   const {userData} = useSelector(state => state.User);
-  // const GroupUsers = props.route.params;
 // const {lstms}=receiverData.lastMsg
-  // console.log('weee==============>', userData);
+  console.log('weee==============>', userData);
   // const [messages, setMessages] = useState([]);
   const [msg, setMsg] = React.useState('');
   const [disabled, setdisabled] = React.useState(false);
@@ -44,7 +42,7 @@ const GrpMessages = (props, {navigation}) => {
   useEffect(() => {
     const onChildAdd = firebase
       .database()
-     .ref('/messages/' + props.route.params.RoomId)
+      .ref('/messages/' + props.route.params.RoomId)
       .on('child_added', snapshot => {
         // console.log('A new node has been added', snapshot.val());
         setallChat(state => [snapshot.val(), ...state]);
@@ -66,13 +64,12 @@ const GrpMessages = (props, {navigation}) => {
     }
     setdisabled(true);
     let msgData = {
-      roomId: props.route.params.RoomId,
+      roomId:props.route.params.RoomId,
       message: msg,
-      from: userData?.id,
+      from: userData?.Name,
       sendTime: moment().format(''),
       msgType: 'text',
-      senderName:userData.Name
-    }; 
+    };
 
     const newReference = firebase
       .database()
@@ -88,10 +85,15 @@ const GrpMessages = (props, {navigation}) => {
         .database()
         .ref('/chatlist/' + props.route.params?.gId + '/' + userData?.id)
         .update(chatListupdate)
+        // .then(() => console.log('Data updated.'))
+        // .then(()=>dispatch(lstmsg(receiverData.lastMsg)))
+      // console.log("'/chatlist/' + userData?.id + '/' + data?.id", receiverData);
       firebase
         .database()
-        .ref('/chatlist/' + userData?.id + props.route.params?.gId)
+        .ref('/chatlist/' + userData?.id + '/' + props.route.params?.gId)
         .update(chatListupdate)
+        // .then(() => console.log('Data updated.'))
+        // .then(()=>dispatch(lstmsg(receiverData.lastMsg)))
 
       setMsg('');
       setdisabled(false);
@@ -114,7 +116,6 @@ const GrpMessages = (props, {navigation}) => {
           <Image source={require('../../Assets/leftarrow.png')} />
         </TouchableOpacity>
         <View style={{flexDirection: 'column', marginTop: -15}}>
-          <View style={{justifyContent:'center',alignItems:'center'}}>
           <Image
             style={{
               height: 50,
@@ -122,15 +123,14 @@ const GrpMessages = (props, {navigation}) => {
               backgroundColor: '#000',
               borderRadius: 50,
               marginLeft: 10,
-              
             }}
             source={{
-              uri: 'https://media.gettyimages.com/photos/tesla-ceo-elon-musk-speaks-during-the-unveiling-of-the-new-tesla-y-picture-id1130598318?s=2048x2048',
+              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_dh9ayOD6Z3q8Beu01vHFIU07lOzegKMTFjCrxDipAg&s',
             }}
           />
-          </View>
           <Text style={{fontWeight: '800', fontSize: 20, marginTop: 5}}>
-           {props.route.params.groupName}
+            {/* {GroupUsers.groupName} */}
+            hiii
           </Text>
         </View>
 
@@ -185,6 +185,14 @@ const GrpMessages = (props, {navigation}) => {
         />
 
         <TouchableOpacity disabled={disabled} onPress={sendMsg}>
+          {/* <Icon
+            style={{
+              // marginHorizontal: 15,
+              color: COLORS.black,
+            }}
+            name="paper-plane-sharp"
+            type="Ionicons"
+          /> */}
           <Image
             source={require('../../Assets/send.png')}
             style={{width: 30, height: 30}}

@@ -3,11 +3,10 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  SafeAreaView,
-  ActivityIndicator,
   StyleSheet,
   FlatList,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useCallback, useEffect} from 'react';
 import AllUsers from './allUsers';
@@ -20,33 +19,27 @@ import {Center, Icon} from 'native-base';
 import moment from 'moment';
 import ChatHeader from '../components/Header/ChatHeader';
 import SimpleToast from 'react-native-simple-toast';
-import { lstmsg } from '../redux/reducer/user';
+import {lstmsg} from '../redux/reducer/user';
 
 const Chat = (props, {navigation}) => {
-
-
-
-  const dispatch=useDispatch();
-
-
+  const dispatch = useDispatch();
   const {userData} = useSelector(state => state.User);
   const {receiverData} = props.route.params;
-const {lstms}=receiverData.lastMsg
-  // console.log('weee==============>', lstms);
-  // const [messages, setMessages] = useState([]);
+  const {lstms} = receiverData.lastMsg;
+  const[loading,setLoading]=useState(false)
+
   const [msg, setMsg] = React.useState('');
   const [disabled, setdisabled] = React.useState(false);
   const [allChat, setallChat] = React.useState([]);
 
   useEffect(() => {
+    
     const onChildAdd = firebase
       .database()
       .ref('/messages/' + receiverData.roomId)
       .on('child_added', snapshot => {
-        // console.log('A new node has been added', snapshot.val());
         setallChat(state => [snapshot.val(), ...state]);
       });
-    // Stop listening for updates when no longer required
     return () =>
       firebase
         .database()
@@ -84,25 +77,29 @@ const {lstms}=receiverData.lastMsg
       firebase
         .database()
         .ref('/chatlist/' + receiverData?.id + '/' + userData?.id)
-        .update(chatListupdate)
-        // .then(() => console.log('Data updated.'))
-        // .then(()=>dispatch(lstmsg(receiverData.lastMsg)))
+        .update(chatListupdate);
+
       console.log("'/chatlist/' + userData?.id + '/' + data?.id", receiverData);
       firebase
         .database()
         .ref('/chatlist/' + userData?.id + '/' + receiverData?.id)
-        .update(chatListupdate)
-        // .then(() => console.log('Data updated.'))
-        // .then(()=>dispatch(lstmsg(receiverData.lastMsg)))
+        .update(chatListupdate);
 
       setMsg('');
       setdisabled(false);
     });
   };
+  useEffect(()=>{
+    setTimeout(()=>{
+      setLoading(!loading);
+    },1000)
+  },[])
 
+  
   return (
+    
+    
     <View style={styles.container}>
-      {/* <ChatHeader data={receiverData} /> */}
       <View
         style={{
           flexDirection: 'row',
@@ -132,8 +129,8 @@ const {lstms}=receiverData.lastMsg
             {receiverData.Name}
           </Text>
         </View>
-
-        <TouchableOpacity onPress={()=>props.navigation.navigate('Profile') }>
+  
+        <TouchableOpacity onPress={() => props.navigation.navigate('Profile')}>
           <Image source={require('../../Assets/Vector.png')} />
         </TouchableOpacity>
       </View>
@@ -142,6 +139,8 @@ const {lstms}=receiverData.lastMsg
         source={require('../../Assets/Line.png')}
       />
       <View style={{flex: 1}}>
+        
+      
         <FlatList
           style={{flex: 1}}
           data={allChat}
@@ -150,17 +149,19 @@ const {lstms}=receiverData.lastMsg
           inverted
           renderItem={({item}) => {
             return (
+              <>
               <MsgComponent sender={item.from == userData.id} item={item} />
+              </>
             );
           }}
         />
+      
       </View>
-
+  
       <View
         style={{
           backgroundColor: '#2994FF',
           elevation: 5,
-          // height: 60,
           flexDirection: 'row',
           alignItems: 'center',
           paddingVertical: 7,
@@ -182,94 +183,29 @@ const {lstms}=receiverData.lastMsg
           value={msg}
           onChangeText={val => setMsg(val)}
         />
-
+  
         <TouchableOpacity disabled={disabled} onPress={sendMsg}>
-          {/* <Icon
-            style={{
-              // marginHorizontal: 15,
-              color: COLORS.black,
-            }}
-            name="paper-plane-sharp"
-            type="Ionicons"
-          /> */}
           <Image
             source={require('../../Assets/send.png')}
             style={{width: 30, height: 30}}
           />
         </TouchableOpacity>
+      
       </View>
+  
+   
     </View>
+  
+    
   );
-};
+}
 
-// define your styles
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
 });
 
-//make this component available to the app
 export default Chat;
-
-//   useEffect(() => {
-//     setMessages([
-//       {
-//         _id:1,
-//         text: 'Hello developer',
-//         createdAt: new Date(),
-//         user: {
-//           _id:props.route.params.rcvrId,
-//           name: 'Name',
-//           avatar: 'https://placeimg.com/140/140/any',
-//         },
-//       },
-//     ])
-//   }, [])
-
-//   const onSend = useCallback((messages = []) => {
-//     setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
-//   }, [])
-
-//   return (
-//     <>
-//     <SafeAreaView>
-//     <View
-//       style={{
-//         flexDirection: 'row',
-//         justifyContent:'space-around',
-//         marginTop: 30,
-//         alignItems: 'center',
-//       }}>
-//       <TouchableOpacity  style={{marginLeft:-20}} onPress={() => props.navigation.goBack()}>
-//         <Image
-
-//           source={require('../../Assets/leftarrow.png')}
-//         />
-//       </TouchableOpacity>
-
-//       <Text style={{fontWeight: '800', fontSize: 20}}>
-//         name
-//       </Text>
-
-//       <TouchableOpacity onPress={() => alert('hello')}>
-//         <Image
-
-//           source={require('../../Assets/Vector.png')}
-//         />
-//       </TouchableOpacity>
-//     </View>
-
-//          </SafeAreaView>
-//         <GiftedChat
-//         messages={messages}
-//           onSend={messages => onSend(messages)}
-//           user={{
-//             _id: props.route.params.rcvrId,
-//           }}
-//         />
-//          </>
-//     );
-//   };
-
-// export default Chat;

@@ -26,7 +26,7 @@ const GrpMessages = (props, {navigation}) => {
   
   
   
-  // console.log(props.route.params.groupName)
+  // console.log(props.route.params.gId)
 
   const dispatch=useDispatch();                           
 
@@ -134,7 +134,7 @@ const GrpMessages = (props, {navigation}) => {
           </Text>
         </View>
 
-        <TouchableOpacity onPress={()=>props.navigation.navigate('Profile') }>
+        <TouchableOpacity onPress={()=>props.navigation.navigate('Ibutton',{groupId:props.route.params.gId}) }>
           <Image source={require('../../Assets/Vector.png')} />
         </TouchableOpacity>
       </View>

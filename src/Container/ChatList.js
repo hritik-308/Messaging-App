@@ -189,7 +189,9 @@ const ChatList = ({navigation}) => {
       data={chatList}
       renderItem={renderItem}
       />
+
     </View>
+    
     </ScrollView>
   )
 }

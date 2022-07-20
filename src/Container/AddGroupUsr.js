@@ -13,16 +13,15 @@ import uuid from 'react-native-uuid';
 import {firebase} from '@react-native-firebase/database';
 import {useSelector} from 'react-redux';
 import {Button, ScrollView} from 'native-base';
-import { object } from 'yup';
+import {array, object} from 'yup';
 
-const GroupChat = ({navigation}, values) => {
-  // console.log('sijdfn===<><><><>',navigation)
+const AddGroupUsr = ({navigation}, values) => {
   const dispatch = useDispatch();
   const [groupDiscription, setgroupDiscription] = useState('');
 
   const [groupName, setgroupName] = useState();
   const [gData, setGData] = useState([]);
-  const [nUsers, setnUsers] = useState();
+  const [nUsers, setnUsers] = useState([]);
   const [Array, setArray] = useState([]);
   const [allUser, setallUser] = useState([]);
   const [allUserBackup, setallUserBackup] = useState([]);
@@ -30,18 +29,23 @@ const GroupChat = ({navigation}, values) => {
   const [search, setSearch] = useState('');
   const {GroupDatas} = useSelector(state => state.Group);
 
+  const {userData} = useSelector(state => state.User);
 
+  //    console.log('Array========><><><><>',Array)
   useEffect(() => {
     getAllUser();
-    
-  }, [allUser]);
+  }, []);
 
   const getAllUser = () => {
     firebase
       .database()
       .ref('/users/')
       .once('value')
-      .then(snapshot => {console.log('userData',Object.values(snapshot.val))});
+      .then(snapshot =>
+        setallUser(
+          Object.values(snapshot.val()).filter(it => it.id !== userData.id),
+        ),
+      );
   };
 
   const SearchBtn =
@@ -61,8 +65,7 @@ const GroupChat = ({navigation}, values) => {
       groupName: groupName,
       groupDiscription: groupDiscription,
       usersData: {
-        // UsersId: uuid.v4(),
-        users: allUser,
+        users: nUsers,
       },
       // userrsName:GroupDatas.groupName
     };
@@ -78,8 +81,9 @@ const GroupChat = ({navigation}, values) => {
   // console.log(GroupData)
 
   const addGroup = () => {
+    AddUser();
     CreateGroup();
-    navigation.navigate('Groups');
+    navigation.navigate('Groups',{Members:nUsers});
   };
 
   const AddUser = () => {
@@ -88,11 +92,33 @@ const GroupChat = ({navigation}, values) => {
       .ref('/users/')
       .once('value')
       .then(snapshot => {
-      Object.values(snapshot.val()).map(item=>{
-          console.log(item.Name)
-        });
+        setArray(Object.values(snapshot.val()));
+
+        // console.log(Object.values(snapshot.val()));
+        // .map(item=>{setArray({
+        //     Name: item.Name,
+        //     phoneNumber: item.phoneNumber,
+        //     id: item.id
+        //   })});
       });
   };
+  const setUserArray = item => {
+      const isFound = nUsers.some(element => {
+        if (element.id === item.id) {
+          return true;
+        }else{
+         return false
+        } 
+
+      });
+      if(!isFound){
+         setnUsers([...nUsers,item])
+      }
+
+    };
+  //   console.log('adduser',Array)
+
+  console.log('dewedw',nUsers);
 
   return (
     <ScrollView>
@@ -141,7 +167,7 @@ const GroupChat = ({navigation}, values) => {
         />
       </View>
 
-      <View style={{flexDirection: 'row', marginRight: 50}}>
+      <View style={{flexDirection: 'row', marginRight: 50, marginTop: 20}}>
         <Text
           style={{
             marginRight: 60,
@@ -162,22 +188,67 @@ const GroupChat = ({navigation}, values) => {
           }}
         />
       </View>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{justifyContent: 'center', alignItems: 'center', marginTop: 10}}
-        onPress={() =>setGData(search)}>
+        onPress={() => setGData(search)}>
         <Text>Add Members</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity
         style={{justifyContent: 'center', alignItems: 'center', marginTop: 30}}
         onPress={addGroup}>
         <Text style={{fontWeight: 'bold', borderWidth: 3}}>CreateGroup</Text>
       </TouchableOpacity>
       {/* <TouchableOpacity
-        style={{justifyContent: 'center', alignItems: 'center', marginTop: 10}}
-        onPress={() => navigation.navigate('Groups')}>
-        <Text>Groups</Text>
-      </TouchableOpacity> */}
+          style={{justifyContent: 'center', alignItems: 'center', marginTop: 10}}
+          onPress={() => navigation.navigate('Groups')}>
+          <Text>Groups</Text>
+        </TouchableOpacity> */}
+      <FlatList
+        nestedScrollEnabled
+        data={SearchBtn}
+        renderItem={({item})=>{return (
+            <View style={{flexDirection: 'row', marginTop: 40}}>
+              <View
+                style={{
+                  marginLeft: 20,
+                  borderRadius: 80,
+                  borderWidth: 4,
+                  borderColor: '#2994FF',
+                }}>
+                <Image
+                  source={{
+                    uri: 'https://media.gettyimages.com/photos/tesla-ceo-elon-musk-speaks-during-the-unveiling-of-the-new-tesla-y-picture-id1130598318?s=2048x2048',
+                  }}
+                  style={{
+                    justifyContent: 'flex-start',
+                    height: 40,
+                    width: 40,
+                    borderRadius: 80,
+                    borderWidth: 5,
+                  }}
+                />
+              </View>
+              <TouchableOpacity onPress={()=>{
+                // console.log(item)
+                setUserArray(item)
+                // setnUsers(item)
+                }}>
+                <View style={{marginLeft: 40}}>
+                  <Text style={{fontWeight: 'bold'}}>{item.Name}</Text>
+                  {/* <View>
+                        <Text style={{color: '#000'}}>{chlist()}</Text>
+                      </View> */}
+                </View>
+                <View style={{marginLeft: 250, flexDirection: 'row'}}>
+                  <Text style={{color: '#000'}}>5:11</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          );}}
+        showsHorizontalScrollIndicator={false}
+      />
     </ScrollView>
   );
 };
-export default GroupChat;
+
+export default AddGroupUsr;

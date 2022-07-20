@@ -62,6 +62,7 @@ const Chat = (props, {navigation}) => {
       to: receiverData.id,
       sendTime: moment().format(''),
       msgType: 'text',
+      senderName:userData.Name
     };
 
     const newReference = firebase

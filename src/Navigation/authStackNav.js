@@ -8,6 +8,10 @@ import GroupChat from '../Container/GroupChat';
 import ChatList from '../Container/ChatList';
 import Groups from '../Container/Groups';
 import GrpMessages from '../Container/GrpMessages';
+import { color } from 'native-base/lib/typescript/theme/styled-system';
+import AddGroupUsr from '../Container/AddGroupUsr';
+import Ibutton from '../components/Chat/Ibutton';
+import LastMessage from '../components/Chat/LastMessage';
 const Stack = createNativeStackNavigator();
 export default function StackNavigation() {
   
@@ -29,10 +33,15 @@ export default function StackNavigation() {
       <Stack.Screen name="LoginScreen" component={LoginScreen} options={{headerShown:false}}/>
       <Stack.Screen name="Chat" component={Chat}  options={{headerShown:false}} />
       <Stack.Screen name="Profile" component={Profile}  options={{headerShown:false}} />
-      <Stack.Screen name="GroupChat" component={GroupChat}  options={{headerShown:false}} />
+      <Stack.Screen name="GroupChat" component={GroupChat}  options={{headerShown:true,headerStyle:{backgroundColor:'#2994FF',}}} />
       <Stack.Screen name="ChatList" component={ChatList}  options={{headerShown:false}} />
       <Stack.Screen name="Groups" component={Groups}  options={{headerShown:false}} />
       <Stack.Screen name="GrpMessages" component={GrpMessages}  options={{headerShown:false}}/>
+      <Stack.Screen name="AddGroupUsr" component={AddGroupUsr}  options={{headerShown:false}} />
+      <Stack.Screen name="Ibutton" component={Ibutton}  options={{headerShown:false}} />
+      <Stack.Screen name="LastMessage" component={LastMessage}  options={{headerShown:false}} />
+
+
       
     </Stack.Navigator>
   );

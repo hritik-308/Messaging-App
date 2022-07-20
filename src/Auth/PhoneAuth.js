@@ -86,7 +86,7 @@ export default function LoginScreen({navigation},values) {
   async function confirmCode() {
     try {
       await confirm.confirm(code);
-      navigation.navigate('AllUsers',{userData:uData});
+      navigation.replace('AllUsers',{userData:uData});
     } catch (error) {
       Alert.alert('Invalid code.', error.message);
     }

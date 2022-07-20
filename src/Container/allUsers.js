@@ -14,74 +14,6 @@ import {useSelector} from 'react-redux';
 import uuid from 'react-native-uuid';
 import { Center } from 'native-base';
 
-// const data = [
-//   {
-//     id: 1,
-//     pic: require('../../Assets/user.png'),
-//     name: 'Benjamin',
-//     time: '12:34',
-//   },
-//   {
-//     id: 2,
-//     pic: require('../../Assets/user.png'),
-//     name: 'Harry',
-//     time: '12:34',
-//   },
-//   {
-//     id: 3,
-//     pic: require('../../Assets/user.png'),
-//     name: 'Joe',
-//     time: '12:34',
-//   },
-//   {
-//     id: 4,
-//     pic: require('../../Assets/user.png'),
-//     name: 'Benjamin Franklin',
-//     time: '12:34',
-//   },
-//   {
-//     id: 5,
-//     pic: require('../../Assets/user.png'),
-//     name: 'Jacob',
-//     time: '12:34',
-//   },
-//   {
-//     id: 6,
-//     pic: require('../../Assets/user.png'),
-//     name: 'Andrew',
-//     time: '12:34',
-//   },
-//   {
-//     id: 7,
-//     pic: require('../../Assets/user.png'),
-//     name: 'mitchell',
-//     time: '12:34',
-//   },
-//   {
-//     id: 8,
-//     pic: require('../../Assets/user.png'),
-//     name: 'steve',
-//     time: '12:34',
-//   },
-//   {
-//     id: 9,
-//     pic: require('../../Assets/user.png'),
-//     name: 'steve',
-//     time: '12:34',
-//   },
-//   {
-//     id: 10,
-//     pic: require('../../Assets/user.png'),
-//     name: 'william',
-//     time: '12:34',
-//   },
-//   {
-//     id: 11,
-//     pic: require('../../Assets/user.png'),
-//     name: 'jeff',
-//     time: '12:34',
-//   },
-// ];
 const AllUsers = ({navigation}, props, data) => {
   //  const {userData} =useSelector(state=>state.User)
   // console.log('ndiobnce=====>',props)
@@ -119,8 +51,8 @@ const AllUsers = ({navigation}, props, data) => {
           Object.values(snapshot.val()).filter(it => it.id !== userData.id),
         );
       });
-  };
-  
+  }
+ 
   const SearchBtn =
     // alert(search)
     allUser.filter(val => {
@@ -171,23 +103,20 @@ const AllUsers = ({navigation}, props, data) => {
         }
       });
   };
-  // console.log("hii============>",data.lastMsg)
+
 
   const renderItem = ({item}) => {
     const chatList = () => {
       createChatList(item);
-      // navigation.navigate('Chat', {Username: item.Name,chatroomId : data.roomId,userData:userData.id,recieverDatas:data.id,})
+      
     };
-    // console.log('dewedw');
+
 
     return (
       <View style={{flexDirection: 'row', marginTop: 40}}>
         <View
           style={{
             marginLeft: 20,
-            borderRadius: 80,
-            borderWidth: 4,
-            borderColor: '#2994FF',
           }}>
           <Image
             source={{
@@ -195,9 +124,9 @@ const AllUsers = ({navigation}, props, data) => {
             }}
             style={{
               justifyContent: 'flex-start',
-              height: 40,
-              width: 40,
-              borderRadius: 80,
+              height: 50,
+              width: 50,
+              borderRadius: 100,
               borderWidth: 5,
             }}
           />
@@ -209,7 +138,7 @@ const AllUsers = ({navigation}, props, data) => {
               <Text style={{color: '#000'}}>{chlist()}</Text>
             </View> */}
           </View>
-          <View style={{marginLeft: 250, flexDirection: 'row'}}>
+          <View style={{marginLeft: 250, flexDirection: 'row',marginTop:-20}}>
             <Text style={{color: '#000'}}>5:11</Text>
           </View>
         </TouchableOpacity>
@@ -266,7 +195,7 @@ const AllUsers = ({navigation}, props, data) => {
             height: 55,
             borderRadius: 5,
           }}>
-          <TouchableOpacity onPress={() => navigation.navigate('GroupChat')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Groups')}>
             <Image
               style={{
                 justifyContent: 'center',

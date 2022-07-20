@@ -13,6 +13,7 @@ import uuid from 'react-native-uuid';
 import {firebase} from '@react-native-firebase/database';
 import {useSelector} from 'react-redux';
 import {Button, Center, ScrollView} from 'native-base';
+import GroupChat from './GroupChat';
 
 const Groups = ({navigation}, props) => {
   const [groupName, setgroupName] = useState();
@@ -25,8 +26,9 @@ const Groups = ({navigation}, props) => {
   const {userData} = useSelector(state => state.User);
 
 
-  // console.log('fii====---->', GroupUsers);
+  // console.log('fii====---->',props.route.params);
   useEffect(() => {
+    
     getAllGroups();
     // chlist();
     // console.log('hii================>>>>>>',allUser);
@@ -75,13 +77,14 @@ const Groups = ({navigation}, props) => {
     };
 
     return (
-      <View style={{flexDirection: 'row', marginTop: 40}}>
+      
+        
+      <View style={{flexDirection: 'row', marginTop: 20}}>
         <View
           style={{
             marginLeft: 20,
-            borderRadius: 80,
-            borderWidth: 4,
-            borderColor: '#2994FF',
+            borderRadius: 100,
+            
           }}>
           <Image
             source={{
@@ -92,7 +95,7 @@ const Groups = ({navigation}, props) => {
               height: 50,
               width: 50,
               borderRadius: 80,
-              borderWidth: 5,
+             
             }}
           />
         </View>
@@ -112,13 +115,14 @@ const Groups = ({navigation}, props) => {
             <View>
               <Text style={{color: '#000'}}>{item.groupDiscription}</Text>
               <View
-                style={{marginLeft: 220, flexDirection: 'row', marginTop: -20}}>
-                <Text style={{color: '#000'}}>5:11</Text>
+                style={{marginLeft: 210, flexDirection: 'row', marginTop: -25}}>
+                <Image source={require('../../Assets/msgLogo.png')}/>
               </View>
             </View>
           </View>
         </TouchableOpacity>
       </View>
+      
     );
   };
 
@@ -130,6 +134,22 @@ const Groups = ({navigation}, props) => {
           Groups
         </Text>
       </View>
+      <View style={{justifyContent:'center',alignItems:'center',marginTop:15}}>
+            {/* <Text style={{borderRadius:10}}>Create Group </Text> */}
+          <TouchableOpacity onPress={()=>navigation.navigate('AddGroupUsr')}>
+            <View style={{flexDirection:'row',overflow:'hidden',marginRight:130,marginTop:20}}>
+            <Image  style={{height:40,width:40,borderRadius:20}} source={require('../../Assets/Group.png')}/>
+            <View style={{marginLeft:40}}>
+            <Text style={{color:"#000"}}>New Group</Text>
+            </View>
+            </View>
+          </TouchableOpacity>
+          <View style={{marginRight:240,marginTop:30}}>
+          <Text style={{color:'#000'}}>
+            All Groups
+          </Text>
+          </View>
+        </View>
       <FlatList
         data={Data}
         keyExtractor={item => item.id}

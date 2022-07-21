@@ -14,34 +14,34 @@ import AllUsers from '../allUsers';
 
 export default function Profile ({navigation},props) {
 
-    const [downloadurl, setDownloadurl] = useState("https://reactjs.org/logo-og.png")
-    const {data}=props
-    console.log('hlw==========>>>>>>',data)
+  const [downloadurl, setDownloadurl] = useState("https://reactjs.org/logo-og.png")
+  const {data}=props
+  console.log('hlw==========>>>>>>',data)
 
-    //open library and upload pic to firebase
-    const pickImageAndUpload = ()=>{
-        launchImageLibrary({quality:0.5},(fileobj)=>{
-        //    console.log(fileobj.assets[0].uri)
-         const uploadTask =  storage().ref().child(`/profilePictures/${Date.now()}`).putFile(fileobj.assets[0].uri)
-                uploadTask.on('state_changed', 
-                 (snapshot) => {
-  
-                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    if(progress==100) alert('image uploaded')
-                    
-                }, 
-                (error) => {
-                    alert("error uploading image",error)
-                }, 
-                //For fetching uploaded photo url
-                () => {
-                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                        setDownloadurl(downloadURL)
-                    });
-                }
-                );
-        })
-    }
+  //open library and upload pic to firebase
+  const pickImageAndUpload = ()=>{
+      launchImageLibrary({quality:0.5},(fileobj)=>{
+      //    console.log(fileobj.assets[0].uri)
+       const uploadTask =  storage().ref().child(`/profilePictures/${Date.now()}`).putFile(fileobj.assets[0].uri)
+              uploadTask.on('state_changed', 
+               (snapshot) => {
+
+                  var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                  if(progress==100) alert('image uploaded')
+                  
+              }, 
+              (error) => {
+                  alert("error uploading image",error)
+              }, 
+              //For fetching uploaded photo url
+              () => {
+                  uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                      setDownloadurl(downloadURL)
+                  });
+              }
+              );
+      })
+  }
 
     //Form validation YUP Schema
     const loginValidationSchema = yup.object().shape({

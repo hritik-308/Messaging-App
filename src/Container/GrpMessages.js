@@ -113,7 +113,7 @@ const GrpMessages = (props, {navigation}) => {
           onPress={() => props.navigation.goBack()}>
           <Image source={require('../../Assets/leftarrow.png')} />
         </TouchableOpacity>
-        <View style={{flexDirection: 'column', marginTop: -15}}>
+        <View style={{flexDirection: 'column', marginTop: -25}}>
           <View style={{justifyContent:'center',alignItems:'center'}}>
           <Image
             style={{
@@ -129,7 +129,7 @@ const GrpMessages = (props, {navigation}) => {
             }}
           />
           </View>
-          <Text style={{fontWeight: '800', fontSize: 20, marginTop: 5}}>
+          <Text style={{fontWeight: '800', fontSize: 20, marginTop: 3}}>
            {props.route.params.groupName}
           </Text>
         </View>
@@ -139,7 +139,7 @@ const GrpMessages = (props, {navigation}) => {
         </TouchableOpacity>
       </View>
       <Image
-        style={{marginTop: 20, marginLeft: 20}}
+        style={{marginTop: 5, marginLeft: 20}}
         source={require('../../Assets/Line.png')}
       />
       <View style={{flex: 1}}>
@@ -159,23 +159,27 @@ const GrpMessages = (props, {navigation}) => {
 
       <View
         style={{
-          backgroundColor: '#2994FF',
-          elevation: 5,
+          // backgroundColor: '#2994FF',
+          // elevation: 5,
           // height: 60,
           flexDirection: 'row',
-          alignItems: 'center',
-          paddingVertical: 7,
-          justifyContent: 'space-evenly',
+          // alignItems: 'center',
+          // paddingVertical: 7,
+          // justifyContent: 'space-evenly',
         }}>
         <TextInput
           style={{
-            backgroundColor: COLORS.white,
-            width: '80%',
-            borderRadius: 25,
-            borderWidth: 0.5,
-            borderColor: COLORS.white,
-            paddingHorizontal: 15,
-            color: COLORS.black,
+            backgroundColor: '#f3f2f3',
+            overflow: 'hidden',
+            alignItems: 'center',
+            flexDirection: 'row',
+            height: 90,
+            width: '77%',
+            borderRadius: 6,
+            borderColor:'#707070',
+            marginHorizontal: 10,
+            marginVertical: 5,
+            borderWidth: 1
           }}
           placeholder="type a message"
           placeholderTextColor={COLORS.black}
@@ -183,13 +187,22 @@ const GrpMessages = (props, {navigation}) => {
           value={msg}
           onChangeText={val => setMsg(val)}
         />
-
-        <TouchableOpacity disabled={disabled} onPress={sendMsg}>
+        <View style={{backgroundColor:"#2994FF",marginTop:8,height:40,width:40,left:300,position:'absolute',borderRadius:5}}>
+        <TouchableOpacity disabled={disabled} onPress={()=>props.navigation.navigate('SendImg')}>
           <Image
-            source={require('../../Assets/send.png')}
-            style={{width: 30, height: 30}}
+            source={require('../../Assets/camera.png')}
+            style={{position:'absolute',left:'8.33%',right:'8.33%',top:'8.33%',bottom:'8.33%',marginTop:12,marginLeft:7}}
           />
         </TouchableOpacity>
+        </View>
+        <View style={{backgroundColor:"#2994FF",marginTop:55,height:40,width:40,left:300,position:'absolute',borderRadius:5}}>
+        <TouchableOpacity disabled={disabled} onPress={sendMsg}>
+          <Image
+            source={require('../../Assets/msg.png')}
+            style={{position:'absolute',left:'8.33%',right:'8.33%',top:'8.33%',bottom:'8.33%',marginTop:12,marginLeft:7}}
+          />
+        </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

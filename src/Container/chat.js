@@ -20,20 +20,20 @@ import moment from 'moment';
 import ChatHeader from '../components/Header/ChatHeader';
 import SimpleToast from 'react-native-simple-toast';
 import {lstmsg} from '../redux/reducer/user';
+import {Moment} from 'moment';
 
 const Chat = (props, {navigation}) => {
   const dispatch = useDispatch();
   const {userData} = useSelector(state => state.User);
   const {receiverData} = props.route.params;
   const {lstms} = receiverData.lastMsg;
-  const[loading,setLoading]=useState(false)
+  const [loading, setLoading] = useState(false);
 
   const [msg, setMsg] = React.useState('');
   const [disabled, setdisabled] = React.useState(false);
   const [allChat, setallChat] = React.useState([]);
 
   useEffect(() => {
-    
     const onChildAdd = firebase
       .database()
       .ref('/messages/' + receiverData.roomId)
@@ -62,7 +62,7 @@ const Chat = (props, {navigation}) => {
       to: receiverData.id,
       sendTime: moment().format(''),
       msgType: 'text',
-      senderName:userData.Name
+      senderName: userData.Name,
     };
 
     const newReference = firebase
@@ -90,16 +90,13 @@ const Chat = (props, {navigation}) => {
       setdisabled(false);
     });
   };
-  useEffect(()=>{
-    setTimeout(()=>{
+  useEffect(() => {
+    setTimeout(() => {
       setLoading(!loading);
-    },1000)
-  },[])
+    }, 1000);
+  }, []);
 
-  
   return (
-    
-    
     <View style={styles.container}>
       <View
         style={{
@@ -113,7 +110,7 @@ const Chat = (props, {navigation}) => {
           onPress={() => props.navigation.goBack()}>
           <Image source={require('../../Assets/leftarrow.png')} />
         </TouchableOpacity>
-        <View style={{flexDirection: 'column', marginTop: -15}}>
+        <View style={{flexDirection: 'column', marginTop: -25}}>
           <Image
             style={{
               height: 50,
@@ -126,22 +123,23 @@ const Chat = (props, {navigation}) => {
               uri: 'https://media.gettyimages.com/photos/tesla-ceo-elon-musk-speaks-during-the-unveiling-of-the-new-tesla-y-picture-id1130598318?s=2048x2048',
             }}
           />
-          <Text style={{fontWeight: '800', fontSize: 20, marginTop: 5}}>
+          <Text style={{fontWeight: '800', fontSize: 20, marginTop: 3}}>
             {receiverData.Name}
           </Text>
         </View>
-  
+
         <TouchableOpacity onPress={() => props.navigation.navigate('Profile')}>
           <Image source={require('../../Assets/Vector.png')} />
         </TouchableOpacity>
       </View>
       <Image
-        style={{marginTop: 20, marginLeft: 20}}
+        style={{marginTop: 5, marginLeft: 20}}
         source={require('../../Assets/Line.png')}
       />
       <View style={{flex: 1}}>
-        
-      
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <Text>{moment().format('dddd')}</Text>
+        </View>
         <FlatList
           style={{flex: 1}}
           data={allChat}
@@ -151,32 +149,36 @@ const Chat = (props, {navigation}) => {
           renderItem={({item}) => {
             return (
               <>
-              <MsgComponent sender={item.from == userData.id} item={item} />
+                <MsgComponent sender={item.from == userData.id} item={item} />
               </>
             );
           }}
         />
-      
       </View>
-  
+
       <View
         style={{
-          backgroundColor: '#2994FF',
-          elevation: 5,
+          // backgroundColor: '#2994FF',
+          // elevation: 5,
+          // height: 60,
           flexDirection: 'row',
-          alignItems: 'center',
-          paddingVertical: 7,
-          justifyContent: 'space-evenly',
+          // alignItems: 'center',
+          // paddingVertical: 7,
+          // justifyContent: 'space-evenly',
         }}>
         <TextInput
           style={{
-            backgroundColor: COLORS.white,
-            width: '80%',
-            borderRadius: 25,
-            borderWidth: 0.5,
-            borderColor: COLORS.white,
-            paddingHorizontal: 15,
-            color: COLORS.black,
+            backgroundColor: '#f3f2f3',
+            overflow: 'hidden',
+            alignItems: 'center',
+            flexDirection: 'row',
+            height: 90,
+            width: '77%',
+            borderRadius: 6,
+            borderColor:'#707070',
+            marginHorizontal: 10,
+            marginVertical: 5,
+            borderWidth: 1
           }}
           placeholder="type a message"
           placeholderTextColor={COLORS.black}
@@ -184,24 +186,26 @@ const Chat = (props, {navigation}) => {
           value={msg}
           onChangeText={val => setMsg(val)}
         />
-  
-        <TouchableOpacity disabled={disabled} onPress={sendMsg}>
+        <View style={{backgroundColor:"#2994FF",marginTop:8,height:40,width:40,left:300,position:'absolute',borderRadius:5}}>
+        <TouchableOpacity disabled={disabled} onPress={()=>SimpleToast.show('Implementation in progress.....')}>
           <Image
-            source={require('../../Assets/send.png')}
-            style={{width: 30, height: 30}}
+            source={require('../../Assets/camera.png')}
+            style={{position:'absolute',left:'8.33%',right:'8.33%',top:'8.33%',bottom:'8.33%',marginTop:12,marginLeft:7}}
           />
         </TouchableOpacity>
-      
+        </View>
+        <View style={{backgroundColor:"#2994FF",marginTop:55,height:40,width:40,left:300,position:'absolute',borderRadius:5}}>
+        <TouchableOpacity disabled={disabled} onPress={sendMsg}>
+          <Image
+            source={require('../../Assets/msg.png')}
+            style={{position:'absolute',left:'8.33%',right:'8.33%',top:'8.33%',bottom:'8.33%',marginTop:12,marginLeft:7}}
+          />
+        </TouchableOpacity>
+        </View>
       </View>
-  
-   
     </View>
-  
-    
   );
-}
-
-
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -13,7 +13,7 @@ import uuid from 'react-native-uuid';
 import {firebase} from '@react-native-firebase/database';
 import {useSelector} from 'react-redux';
 import {Button, ScrollView} from 'native-base';
-import { object } from 'yup';
+import {object} from 'yup';
 
 const GroupChat = ({navigation}, values) => {
   // console.log('sijdfn===<><><><>',navigation)
@@ -30,10 +30,8 @@ const GroupChat = ({navigation}, values) => {
   const [search, setSearch] = useState('');
   const {GroupDatas} = useSelector(state => state.Group);
 
-
   useEffect(() => {
     getAllUser();
-    
   }, [allUser]);
 
   const getAllUser = () => {
@@ -41,7 +39,9 @@ const GroupChat = ({navigation}, values) => {
       .database()
       .ref('/users/')
       .once('value')
-      .then(snapshot => {console.log('userData',Object.values(snapshot.val))});
+      .then(snapshot => {
+        console.log('userData', Object.values(snapshot.val));
+      });
   };
 
   const SearchBtn =
@@ -88,8 +88,8 @@ const GroupChat = ({navigation}, values) => {
       .ref('/users/')
       .once('value')
       .then(snapshot => {
-      Object.values(snapshot.val()).map(item=>{
-          console.log(item.Name)
+        Object.values(snapshot.val()).map(item => {
+          console.log(item.Name);
         });
       });
   };
@@ -164,7 +164,7 @@ const GroupChat = ({navigation}, values) => {
       </View>
       <TouchableOpacity
         style={{justifyContent: 'center', alignItems: 'center', marginTop: 10}}
-        onPress={() =>setGData(search)}>
+        onPress={() => setGData(search)}>
         <Text>Add Members</Text>
       </TouchableOpacity>
       <TouchableOpacity

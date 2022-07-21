@@ -12,12 +12,13 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import uuid from 'react-native-uuid';
-import { Center } from 'native-base';
+import {Center} from 'native-base';
 
 const AllUsers = ({navigation}, props, data) => {
   //  const {userData} =useSelector(state=>state.User)
   // console.log('ndiobnce=====>',props)
   const [allUser, setallUser] = useState([]);
+  const [Data, setData] = useState([]);
   const [allUserBackup, setallUserBackup] = useState([]);
   const [filterUser, setfilterUser] = useState([]);
   const [search, setSearch] = useState('');
@@ -29,6 +30,7 @@ const AllUsers = ({navigation}, props, data) => {
   // console.log('dfb------------------->', userData);
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    // getAllGroups();
   }, []);
 
   useEffect(() => {
@@ -51,8 +53,8 @@ const AllUsers = ({navigation}, props, data) => {
           Object.values(snapshot.val()).filter(it => it.id !== userData.id),
         );
       });
-  }
- 
+  };
+
   const SearchBtn =
     // alert(search)
     allUser.filter(val => {
@@ -103,14 +105,19 @@ const AllUsers = ({navigation}, props, data) => {
         }
       });
   };
-
+  const getAllGroups = async () => {
+    firebase
+      .database()
+      .ref('/Groups/')
+      .on('value', snapshot => {
+        setData(Object.values(snapshot.val()));
+      });
+  };
 
   const renderItem = ({item}) => {
     const chatList = () => {
       createChatList(item);
-      
     };
-
 
     return (
       <View style={{flexDirection: 'row', marginTop: 40}}>
@@ -138,8 +145,8 @@ const AllUsers = ({navigation}, props, data) => {
               <Text style={{color: '#000'}}>{chlist()}</Text>
             </View> */}
           </View>
-          <View style={{marginLeft: 250, flexDirection: 'row',marginTop:-20}}>
-            <Text style={{color: '#000'}}>5:11</Text>
+          <View style={{marginLeft: 250, flexDirection: 'row', marginTop: -20}}>
+            <Image source={require('../../Assets/msgLogo.png')}/>
           </View>
         </TouchableOpacity>
       </View>
@@ -151,7 +158,7 @@ const AllUsers = ({navigation}, props, data) => {
       <View
         style={{justifyContent: 'center', alignItems: 'center', marginTop: 5}}>
         <Text style={{color: '#2994FF', fontWeight: 'bold', fontSize: 30}}>
-          Messages
+          All Users
         </Text>
       </View>
       <View style={{flexDirection: 'row'}}>
@@ -162,11 +169,12 @@ const AllUsers = ({navigation}, props, data) => {
             alignItems: 'center',
             flexDirection: 'row',
             height: 60,
-            width: '77%',
+            width: '90%',
             borderRadius: 6,
             backgroundColor: '#f2f3f2',
             marginHorizontal: 10,
             marginVertical: 20,
+            borderWidth: 1
           }}>
           <Image
             style={{
@@ -177,7 +185,7 @@ const AllUsers = ({navigation}, props, data) => {
             source={require('../../Assets/search.png')}
           />
           <TextInput
-            style={{flexWrap: 'wrap', flex: 1, borderWidth: 1}}
+            style={{flexWrap: 'wrap', flex: 1, }}
             placeholder="Search"
             value={search}
             onChangeText={text => {
@@ -185,7 +193,7 @@ const AllUsers = ({navigation}, props, data) => {
             }}
           />
         </View>
-        <View
+        {/* <View
           style={{
             justifyContent: 'center',
             marginLeft: 7,
@@ -207,7 +215,7 @@ const AllUsers = ({navigation}, props, data) => {
               source={require('../../Assets/+.png')}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
       <View>
         <FlatList
@@ -216,7 +224,9 @@ const AllUsers = ({navigation}, props, data) => {
           renderItem={renderItem}
           showsHorizontalScrollIndicator={false}
         />
-        <TouchableOpacity style={{marginTop:380,justifyContent:'center',marginLeft:140}} onPress={()=>navigation.navigate('ChatList' , {receiverData: data})}>
+        <TouchableOpacity
+          style={{marginTop: 380, justifyContent: 'center', marginLeft: 140}}
+          onPress={() => navigation.navigate('ChatList', {receiverData: data})}>
           <Text>ChatList</Text>
         </TouchableOpacity>
       </View>

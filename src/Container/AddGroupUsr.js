@@ -83,7 +83,7 @@ const AddGroupUsr = ({navigation}, values) => {
   const addGroup = () => {
     AddUser();
     CreateGroup();
-    navigation.navigate('Groups',{Members:nUsers});
+    navigation.navigate('Groups', {Members: nUsers});
   };
 
   const AddUser = () => {
@@ -103,22 +103,20 @@ const AddGroupUsr = ({navigation}, values) => {
       });
   };
   const setUserArray = item => {
-      const isFound = nUsers.some(element => {
-        if (element.id === item.id) {
-          return true;
-        }else{
-         return false
-        } 
-
-      });
-      if(!isFound){
-         setnUsers([...nUsers,item])
+    const isFound = nUsers.some(element => {
+      if (element.id === item.id) {
+        return true;
+      } else {
+        return false;
       }
-
-    };
+    });
+    if (!isFound) {
+      setnUsers([...nUsers, item]);
+    }
+  };
   //   console.log('adduser',Array)
 
-  console.log('dewedw',nUsers);
+  console.log('dewedw', nUsers);
 
   return (
     <ScrollView>
@@ -206,7 +204,8 @@ const AddGroupUsr = ({navigation}, values) => {
       <FlatList
         nestedScrollEnabled
         data={SearchBtn}
-        renderItem={({item})=>{return (
+        renderItem={({item}) => {
+          return (
             <View style={{flexDirection: 'row', marginTop: 40}}>
               <View
                 style={{
@@ -228,10 +227,11 @@ const AddGroupUsr = ({navigation}, values) => {
                   }}
                 />
               </View>
-              <TouchableOpacity onPress={()=>{
-                // console.log(item)
-                setUserArray(item)
-                // setnUsers(item)
+              <TouchableOpacity
+                onPress={() => {
+                  // console.log(item)
+                  setUserArray(item);
+                  // setnUsers(item)
                 }}>
                 <View style={{marginLeft: 40}}>
                   <Text style={{fontWeight: 'bold'}}>{item.Name}</Text>
@@ -244,7 +244,8 @@ const AddGroupUsr = ({navigation}, values) => {
                 </View>
               </TouchableOpacity>
             </View>
-          );}}
+          );
+        }}
         showsHorizontalScrollIndicator={false}
       />
     </ScrollView>

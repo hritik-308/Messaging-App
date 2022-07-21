@@ -17,38 +17,36 @@ import auth from '@react-native-firebase/auth';
 import PhoneInput from 'react-native-phone-number-input';
 import Chat from '../Container/chat';
 import AllUsers from '../Container/allUsers';
-import { firebase } from '@react-native-firebase/database';
-import uuid from 'react-native-uuid'
-import { useDispatch, useSelector } from 'react-redux';
+import {firebase} from '@react-native-firebase/database';
+import uuid from 'react-native-uuid';
+import {useDispatch, useSelector} from 'react-redux';
 import SimpleToast from 'react-native-simple-toast';
-import {setUser} from '../redux/reducer/user'
+import {setUser} from '../redux/reducer/user';
 
-
-export default function LoginScreen({navigation},values) {
+export default function LoginScreen({navigation}, values) {
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [uData, setUData] = useState([])
+  const [uData, setUData] = useState([]);
   // If null, no SMS has been sent
   const [confirm, setConfirm] = useState(null);
-  const[Name,setName]=useState();
+  const [Name, setName] = useState();
   const [code, setCode] = useState('');
-  const [Account,setAccount]=useState()
+  const [Account, setAccount] = useState();
 
-
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   // const {currUser}= useSelector(state =>state.User.userData)
   const createUser = async () => {
     const usersData = {
-      id:uuid.v4(),
+      id: uuid.v4(),
       Name: Name,
-      phoneNumber:phoneNumber,
+      phoneNumber: phoneNumber,
     };
     const newReference = firebase.database().ref('/users/' + usersData.id);
     //Creating refernce in rnFirebase
     newReference
       .set(usersData)
       .then(() => console.log('Data updated.'))
-      .then(() => dispatch(setUser(usersData)))
-      // .then(() => navigation.navigate('Chat'));
+      .then(() => dispatch(setUser(usersData)));
+    // .then(() => navigation.navigate('Chat'));
   };
 
   const loginUser = async () => {
@@ -56,25 +54,23 @@ export default function LoginScreen({navigation},values) {
       .ref('/users/')
 
       .once('value')
-      .then( async snapshot => {
+      .then(async snapshot => {
         if (snapshot.val() == null) {
-           SimpleToast.show("Invalid phoneNumber!");
-           return false;
+          SimpleToast.show('Invalid phoneNumber!');
+          return false;
         }
         let userData = Object.values(snapshot.val())[0];
-       
 
         console.log('User data:===========> ', userData);
         dispatch(setUser(userData));
-         setAccount(userData);
-        SimpleToast.show("Login Successfully!");
+        setAccount(userData);
+        SimpleToast.show('Login Successfully!');
       });
   };
 
-  const AddUser =()=>{
-    createUser(),
-    confirmCode()
-  }
+  const AddUser = () => {
+    createUser(), confirmCode();
+  };
 
   // Handle the button press
   async function signInWithPhoneNumber(phoneNumber) {
@@ -86,7 +82,7 @@ export default function LoginScreen({navigation},values) {
   async function confirmCode() {
     try {
       await confirm.confirm(code);
-      navigation.replace('AllUsers',{userData:uData});
+      navigation.replace('ChatList', {userData: uData});
     } catch (error) {
       Alert.alert('Invalid code.', error.message);
     }
@@ -97,8 +93,7 @@ export default function LoginScreen({navigation},values) {
     // }
     return (
       <>
-        <SafeAreaView
-          style={{paddingHorizontal: 60, backgroundColor:'#fff'}}>
+        <SafeAreaView style={{paddingHorizontal: 60, backgroundColor: '#fff'}}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{flexDirection: 'row', marginTop: 80}}>
               <Text
@@ -106,7 +101,7 @@ export default function LoginScreen({navigation},values) {
                   fontSize: 31,
                   padding: 4,
                   fontWeight: 'bold',
-                  color:'#000',
+                  color: '#000',
                 }}>
                 Enter
               </Text>
@@ -115,7 +110,7 @@ export default function LoginScreen({navigation},values) {
                   fontSize: 31,
                   padding: 4,
                   fontWeight: 'bold',
-                  color:'#64beff',
+                  color: '#64beff',
                 }}>
                 Your
               </Text>
@@ -130,30 +125,37 @@ export default function LoginScreen({navigation},values) {
               </Text>
             </View>
 
-            <Text
-              style={{fontSize: 14, fontWeight: 'bold', color: '#a5a5a5'}}>
+            <Text style={{fontSize: 14, fontWeight: 'bold', color: '#a5a5a5'}}>
               You Will Receive a 6 digit code for phone number verification
             </Text>
           </ScrollView>
-          </SafeAreaView>
+        </SafeAreaView>
         <View
           style={{
             padding: 100,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor:'#fff',
+            backgroundColor: '#fff',
           }}>
-             <View style={{flexDirection:'row',marginRight:50}}>
-
-                  <Text style={{marginRight:60,marginTop:15,fontWeight:'bold',fontSize:20,color:"#000"}}>Name :</Text>
-                   <TextInput
-                   onChangeText={text => setName(text)}
-                    value={values.Name}
-                    placeholder="Enter Your Name"
-                    withShadow
-                    autoFocus
-                    />
-            </View>
+          <View style={{flexDirection: 'row', marginRight: 50}}>
+            <Text
+              style={{
+                marginRight: 60,
+                marginTop: 15,
+                fontWeight: 'bold',
+                fontSize: 20,
+                color: '#000',
+              }}>
+              Name :
+            </Text>
+            <TextInput
+              onChangeText={text => setName(text)}
+              value={values.Name}
+              placeholder="Enter Your Name"
+              withShadow
+              autoFocus
+            />
+          </View>
           <PhoneInput
             onChangeText={text => setPhoneNumber(text)}
             value={phoneNumber}
@@ -161,7 +163,7 @@ export default function LoginScreen({navigation},values) {
             keyboardType="phone-pad"
             withShadow
             autoFocus
-            />
+          />
 
           <TouchableHighlight
             style={{
@@ -230,7 +232,7 @@ export default function LoginScreen({navigation},values) {
           marginLeft: 48,
         }}
       />
-      <Text style={{margin: 60, fontSize: 16, color:'#fff'}}>
+      <Text style={{margin: 60, fontSize: 16, color: '#fff'}}>
         Code is Send To Given Number
       </Text>
       <TextInput
@@ -253,10 +255,6 @@ export default function LoginScreen({navigation},values) {
     </View>
   );
 }
-
-
-
-
 
 // import React, {useState,useEffect} from 'react';
 // import {
@@ -331,7 +329,7 @@ export default function LoginScreen({navigation},values) {
 //         <SafeAreaView
 //           style={{paddingHorizontal: 20, backgroundColor:'#fff'}}>
 //           <ScrollView showsVerticalScrollIndicator={false}>
-            
+
 //             <View style={{flexDirection: 'row', marginTop: 80}}>
 //               <Text
 //                 style={{
@@ -397,7 +395,7 @@ export default function LoginScreen({navigation},values) {
 
 //           <TouchableHighlight
 //             style={{
-            
+
 //               textAlign: 'center',
 //               backgroundColor: "dodgerblue",
 //               width:250,
@@ -451,7 +449,7 @@ export default function LoginScreen({navigation},values) {
 //           Phone
 //         </Text>
 //       </View>
-     
+
 //       <Text style={{margin: 60, fontSize: 16, color: 'blue'}}>
 //         Code is Send To Given Number
 //       </Text>

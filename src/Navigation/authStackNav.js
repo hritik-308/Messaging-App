@@ -3,7 +3,7 @@ import LoginScreen from '../Auth/PhoneAuth';
 import Chat from '../Container/chat';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AllUsers from '../Container/allUsers';
-import Profile from '../Container/Profile/Profile';
+import Profile from '../Profile/Profile';
 import GroupChat from '../Container/GroupChat';
 import ChatList from '../Container/ChatList';
 import Groups from '../Container/Groups';

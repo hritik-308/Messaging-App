@@ -4,7 +4,7 @@ import StackNavigation from './src/Navigation/authStackNav';
 import LoginScreen from './src/Auth/PhoneAuth';
 import Chat from './src/Container/chat';
 import { NativeBaseProvider } from 'native-base';
-import Profile from './src/Container/Profile/Profile';
+// import Profile from './src/Container/Profile/Profile';
 import GroupChat from './src/Container/GroupChat';
 
 const App = () => {

@@ -1,6 +1,6 @@
 // import moment from 'moment';
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable ,Image} from 'react-native';
 import { COLORS } from '../constants/colors';
 import { FONTS } from '../constants/Font';
 import TimeDelivery from './TimeDelivery';
@@ -37,9 +37,13 @@ const MsgComponent = (props) => {
                  <Text style={{ paddingLeft: 5, color:  sender ? COLORS.black : COLORS.white,fontFamily:FONTS.Regular,fontSize:12.5,fontSize:13,fontWeight:'bold' }}>
                     {item.senderName}
                 </Text>
+                { item.Images == {} ? 
+
                 <Text style={{ paddingLeft: 5, color:  sender ? COLORS.black : COLORS.white,fontFamily:FONTS.Regular,fontSize:14,marginTop:4 }}>
                     {item.message}
-                </Text>
+                </Text>   :
+                <Image source={{uri:item.Images}}/>
+}
                 <View style={{flexDirection:'row'}}>
                 <TimeDelivery
                     sender={sender}

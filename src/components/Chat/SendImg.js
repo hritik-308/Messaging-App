@@ -64,11 +64,11 @@ const SendImg = () => {
       />
 
       <View style={styles.box2}>
-        {/* <TouchableOpacity style={styles.tco} onPress={()=>pickImageAndUpload()}>
+        <TouchableOpacity style={styles.tco} onPress={()=>pickImageAndUpload()}>
                     <Image 
                       style={styles.cty}
                       source={require('../../../Assets/pluss.png')}/>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
       </View>
     </View>
   );

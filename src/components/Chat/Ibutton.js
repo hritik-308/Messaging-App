@@ -6,7 +6,7 @@ import {FlatList} from 'native-base';
 
 const Ibutton = props => {
   const navigation = props.navigation;
-  console.log(navigation);
+  // console.log(navigation);
   useEffect(() => {
     readData();
   }, []);
@@ -25,15 +25,15 @@ const Ibutton = props => {
           snapshot.val(snapshot.val(Object.values(snapshot.val()))),
         ).map(it => {
           if (props.route.params.groupId == it.groupId) {
-            setGroup(it.usersData.users);
-            setLength(it.usersData.users.length);
+            setGroup(it.users);
+            setLength(it.users.length);
           }
         });
       });
   };
 
   const renderItem = ({item}, navigation) => {
-    //   console.log('groupData===---909090',length)
+      // console.log('groupData===---909090',item)
 
     return (
       <View>
@@ -70,6 +70,9 @@ const Ibutton = props => {
               <Image source={require('../../../Assets/msgLogo.png')} />
             </View>
           </TouchableOpacity>
+        </View>
+        <View >
+          <Image source={{uri:item.Images}}/>
         </View>
       </View>
     );

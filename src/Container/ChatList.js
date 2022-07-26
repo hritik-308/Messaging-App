@@ -41,7 +41,6 @@ const ChatList = ({navigation}) => {
   };
 
   const SearchBtn =
-  // alert(search)
   chatList.filter(val => {
     if (search == '') {
       return val;
@@ -98,7 +97,7 @@ const ChatList = ({navigation}) => {
     //   // console.log('item.send_time',item.sendTime)
     //   setDate(moment(item.sendTime).format('LT'));
     // }
-    // console.log(item.sendTime)
+    // console.log(item)
 
     const chatList = () => {
       createChatList(item);

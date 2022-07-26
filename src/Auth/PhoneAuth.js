@@ -44,7 +44,7 @@ export default function LoginScreen({navigation}, values) {
     //Creating refernce in rnFirebase
     newReference
       .set(usersData)
-      .then(() => console.log('Data updated.'))
+      // .then(() => console.log('Data updated.'))
       .then(() => dispatch(setUser(usersData)));
     // .then(() => navigation.navigate('Chat'));
   };
@@ -61,7 +61,7 @@ export default function LoginScreen({navigation}, values) {
         }
         let userData = Object.values(snapshot.val())[0];
 
-        console.log('User data:===========> ', userData);
+        // console.log('User data:===========> ', userData);
         dispatch(setUser(userData));
         setAccount(userData);
         SimpleToast.show('Login Successfully!');

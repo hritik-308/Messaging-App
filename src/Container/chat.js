@@ -7,6 +7,7 @@ import {
   FlatList,
   TextInput,
   ActivityIndicator,
+  Dimensions
 } from 'react-native';
 import React, {useState, useCallback, useEffect} from 'react';
 import AllUsers from './allUsers';
@@ -32,6 +33,10 @@ const Chat = (props, {navigation}) => {
   const [msg, setMsg] = React.useState('');
   const [disabled, setdisabled] = React.useState(false);
   const [allChat, setallChat] = React.useState([]);
+  const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+  // console.log('Day of message==>',moment(receiverData.sendTime).format('dddd'))
 
   useEffect(() => {
     const onChildAdd = firebase
@@ -138,7 +143,7 @@ const Chat = (props, {navigation}) => {
       />
       <View style={{flex: 1}}>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Text>{moment().format('dddd')}</Text>
+          <Text>{moment(receiverData.sendTime).format('dddd')}</Text>
         </View>
         <FlatList
           style={{flex: 1}}
@@ -165,6 +170,8 @@ const Chat = (props, {navigation}) => {
           // alignItems: 'center',
           // paddingVertical: 7,
           // justifyContent: 'space-evenly',
+          
+         
         }}>
         <TextInput
           style={{
@@ -173,10 +180,10 @@ const Chat = (props, {navigation}) => {
             alignItems: 'center',
             flexDirection: 'row',
             height: 90,
-            width: '77%',
+            width: '74%',
             borderRadius: 6,
             borderColor:'#707070',
-            marginHorizontal: 10,
+            marginHorizontal: 15,
             marginVertical: 5,
             borderWidth: 1
           }}
@@ -186,6 +193,7 @@ const Chat = (props, {navigation}) => {
           value={msg}
           onChangeText={val => setMsg(val)}
         />
+        <View style={{position:'absolute',marginLeft:14}}>
         <View style={{backgroundColor:"#2994FF",marginTop:8,height:40,width:40,left:300,position:'absolute',borderRadius:5}}>
         <TouchableOpacity disabled={disabled} onPress={()=>SimpleToast.show('Implementation in progress.....')}>
           <Image
@@ -201,6 +209,7 @@ const Chat = (props, {navigation}) => {
             style={{position:'absolute',left:'8.33%',right:'8.33%',top:'8.33%',bottom:'8.33%',marginTop:12,marginLeft:7}}
           />
         </TouchableOpacity>
+        </View>
         </View>
       </View>
     </View>

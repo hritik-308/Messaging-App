@@ -20,9 +20,8 @@ import SimpleToast from 'react-native-simple-toast';
 import ImagePicker from 'react-native-image-crop-picker';
 
 const GrpMessages = (props, {navigation}) => {
-  // console.log(props.route.params.gId)
+  console.log(props.route.params.gId)
 
- 
   const dispatch = useDispatch();
 
   const {userData} = useSelector(state => state.User);
@@ -32,6 +31,8 @@ const GrpMessages = (props, {navigation}) => {
   const [allChat, setallChat] = React.useState([]);
   const [data, setData] = useState([]);
   const [image, setImage] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [time,setTime]=useState()
 
   const takePhotoFromCamera = () => {
     ImagePicker.openCamera({
@@ -81,6 +82,7 @@ const GrpMessages = (props, {navigation}) => {
       .on('child_added', snapshot => {
         // console.log('A new node has been added', Object.values(snapshot.val(snapshot.val())).map(item=>(item.Images)));
         setallChat(state => [snapshot.val(), ...state]);
+        setTime(snapshot.val().sendTime)
         // setAllImages(state=>[snapshot.val(),...state]);
       });
     // Stop listening for updates when no longer required
@@ -94,13 +96,13 @@ const GrpMessages = (props, {navigation}) => {
   const msgvalid = txt => txt && txt.replace(/\s/g, '').length;
 
   const sendMsg = () => {
-    if (msg == '' || msgvalid(msg) == 0) {
+    if (msgvalid(msg) == 0 || msg === '') {
       SimpleToast.show('Enter something....');
       return false;
-    }else if(image==[]||image==0){
+    } else if (image === [] || image === null || image === undefined) {
       SimpleToast.show('Enter something....');
+      return false;
     }
-
     setdisabled(true);
     let msgData = {
       roomId: props.route.params.RoomId,
@@ -109,7 +111,7 @@ const GrpMessages = (props, {navigation}) => {
       sendTime: moment().format(''),
       msgType: 'text',
       senderName: userData.Name,
-      Images:image
+      Images: image,
     };
 
     const newReference = firebase
@@ -132,174 +134,181 @@ const GrpMessages = (props, {navigation}) => {
         .update(chatListupdate);
 
       setMsg('');
-      setImage([])
+      setImage([]);
       setdisabled(false);
     });
   };
- 
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 800);
+  });
+
+  console.log(moment(time).format('dddd'))
+
   return (
     <View style={styles.container}>
-      {/* <ChatHeader data={receiverData} /> */}
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          marginTop: 30,
-          alignItems: 'center',
-        }}>
-        <TouchableOpacity
-          style={{marginLeft: -20}}
-          onPress={() => props.navigation.goBack()}>
-          <Image source={require('../../Assets/leftarrow.png')} />
-        </TouchableOpacity>
-        <View style={{flexDirection: 'column', marginTop: -25}}>
+      {loading ? (
+        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+          <ActivityIndicator size={'large'} color="#2994FF" />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              marginTop: 30,
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              style={{marginLeft: -20}}
+              onPress={() => props.navigation.goBack()}>
+              <Image source={require('../../Assets/leftarrow.png')} />
+            </TouchableOpacity>
+            <View style={{flexDirection: 'column', marginTop: -25}}>
+              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <Image
+                  style={{
+                    height: 34,
+                    width: 34,
+                    backgroundColor: '#000',
+                    borderRadius: 30,
+                    marginLeft: 10,
+                  }}
+                  source={{
+                    uri: 'https://media.gettyimages.com/photos/tesla-ceo-elon-musk-speaks-during-the-unveiling-of-the-new-tesla-y-picture-id1130598318?s=2048x2048',
+                  }}
+                />
+              </View>
+              <Text style={{fontWeight: '800', fontSize: 20, marginTop: 0}}>
+                {props.route.params.groupName}
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() =>
+                props.navigation.navigate('Ibutton', {
+                  groupId: props.route.params.gId,
+                })
+              }>
+              <Image source={require('../../Assets/Vector.png')} />
+            </TouchableOpacity>
+          </View>
+          <Image
+            style={{marginTop: 2, marginLeft: 20}}
+            source={require('../../Assets/Line.png')}
+          />
+          <View style={{flex: 1}}>
+
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Image
-              style={{
-                height: 50,
-                width: 50,
-                backgroundColor: '#000',
-                borderRadius: 50,
-                marginLeft: 10,
-              }}
-              source={{
-                uri: 'https://media.gettyimages.com/photos/tesla-ceo-elon-musk-speaks-during-the-unveiling-of-the-new-tesla-y-picture-id1130598318?s=2048x2048',
+          <Text>{moment(time).format('dddd')}</Text>
+        </View>
+            <FlatList
+              style={{flex: 1}}
+              setLoading={false}
+              data={allChat}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={(item, index) => index}
+              inverted
+              renderItem={({item}) => {
+                return (
+                  <MsgComponent sender={item.from == userData.id} item={item} />
+                );
               }}
             />
           </View>
-          <Text style={{fontWeight: '800', fontSize: 20, marginTop: 3}}>
-            {props.route.params.groupName}
-          </Text>
-        </View>
 
-        <TouchableOpacity
-          onPress={() =>
-            props.navigation.navigate('Ibutton', {
-              groupId: props.route.params.gId,
-            })
-          }>
-          <Image source={require('../../Assets/Vector.png')} />
-        </TouchableOpacity>
-      </View>
-      <Image
-        style={{marginTop: 5, marginLeft: 20}}
-        source={require('../../Assets/Line.png')}
-      />
-      <View style={{flex: 1}}>
-        <FlatList
-          style={{flex: 1}}
-          data={allChat}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => index}
-          inverted
-          renderItem={({item}) => {
-            return (
-              
-              <MsgComponent sender={item.from == userData.id} item={item} />
-              
-            );
-          }}
-
-
-        />
-      </View>
-
-      <View
-        style={{
-          // backgroundColor: '#2994FF',
-          // elevation: 5,
-          // height: 60,
-          flexDirection: 'row',
-          // alignItems: 'center',
-          // paddingVertical: 7,
-          // justifyContent: 'space-evenly',
-        }}>
-        <View style={styles.TinputView}>
-          <ScrollView horizontal={true}>
-          <View style={{flexDirection:'row',padding:20}}>
-          {image.map(item => {
-            console.log('lkdnfgne----',item.path)
-           return( 
-            
-           <Image
+          <View
             style={{
-              height: 200,
-              width: 200,
-              backgroundColor:'red',
-              borderColor: 'dodgerblue',
-              marginVertical: 15,
-            }}
-            source={{uri: item.path}}
-          />
-          
-          )
-          })}
-          
-</View>
-</ScrollView>
-         
-          <TextInput
-            style={styles.Tinput}
-            placeholder="type a message"
-            placeholderTextColor={COLORS.black}
-            multiline={true}
-            value={msg}
-            onChangeText={val => setMsg(val)}
-          />
-        </View>
-        <View
-          style={{
-            backgroundColor: '#2994FF',
-            marginTop: 8,
-            height: 40,
-            width: 40,
-            left: 300,
-            position: 'absolute',
-            borderRadius: 5,
-          }}>
-          <TouchableOpacity
-            disabled={disabled}
-            onPress={choosePhotoFromLibrary}>
-            <Image
-              source={require('../../Assets/camera.png')}
+              flexDirection: 'row',
+            }}>
+            <View style={styles.TinputView}>
+              <ScrollView horizontal={true}>
+                <View style={{flexDirection: 'row', padding: 20}}>
+                  {image.map(item => {
+                    // console.log('lkdnfgne----',item.path)
+                    return (
+                      <Image
+                        style={{
+                          height: 200,
+                          width: 200,
+                          backgroundColor: 'red',
+                          borderColor: 'dodgerblue',
+                          marginVertical: 15,
+                        }}
+                        source={{uri: item.path}}
+                      />
+                    );
+                  })}
+                </View>
+              </ScrollView>
+
+              <TextInput
+                style={styles.Tinput}
+                placeholder="type a message"
+                placeholderTextColor={COLORS.black}
+                multiline={true}
+                value={msg}
+                onChangeText={val => setMsg(val)}
+              />
+            </View>
+            <View
               style={{
+                backgroundColor: '#2994FF',
+                marginTop: 8,
+                height: 40,
+                width: 40,
+                left: 300,
                 position: 'absolute',
-                left: '8.33%',
-                right: '8.33%',
-                top: '8.33%',
-                bottom: '8.33%',
-                marginTop: 12,
-                marginLeft: 7,
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            backgroundColor: '#2994FF',
-            marginTop: 55,
-            height: 40,
-            width: 40,
-            left: 300,
-            position: 'absolute',
-            borderRadius: 5,
-          }}>
-          <TouchableOpacity disabled={disabled} onPress={sendMsg}>
-            <Image
-              source={require('../../Assets/msg.png')}
+                borderRadius: 5,
+              }}>
+              <TouchableOpacity
+                disabled={disabled}
+                onPress={choosePhotoFromLibrary}>
+                <Image
+                  source={require('../../Assets/camera.png')}
+                  style={{
+                    position: 'absolute',
+                    left: '8.33%',
+                    right: '8.33%',
+                    top: '8.33%',
+                    bottom: '8.33%',
+                    marginTop: 12,
+                    marginLeft: 7,
+                    
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View
               style={{
+                backgroundColor: '#2994FF',
+                marginTop: 55,
+                height: 40,
+                width: 40,
+                left: 300,
                 position: 'absolute',
-                left: '8.33%',
-                right: '8.33%',
-                top: '8.33%',
-                bottom: '8.33%',
-                marginTop: 12,
-                marginLeft: 7,
-              }}
-            />
-          </TouchableOpacity>
+                borderRadius: 5,
+              }}>
+              <TouchableOpacity disabled={disabled} onPress={sendMsg}>
+                <Image
+                  source={require('../../Assets/msg.png')}
+                  style={{
+                    position: 'absolute',
+                    left: '8.33%',
+                    right: '8.33%',
+                    top: '8.33%',
+                    bottom: '8.33%',
+                    marginTop: 12,
+                    marginLeft: 7,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      </View>
+      )}
     </View>
   );
 };
@@ -315,7 +324,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     alignItems: 'center',
     flexDirection: 'row',
-    height: 50,
+    height: 40,
     width: '77%',
     borderColor: '#707070',
     marginHorizontal: 10,
@@ -332,7 +341,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderColor: '#707070',
     marginHorizontal: 10,
-    marginVertical: 5,
+    marginVertical: 2,
     borderWidth: 1,
   },
 });

@@ -8,7 +8,6 @@ import GroupChat from '../Container/GroupChat';
 import ChatList from '../Container/ChatList';
 import Groups from '../Container/Groups';
 import GrpMessages from '../Container/GrpMessages';
-import {color} from 'native-base/lib/typescript/theme/styled-system';
 import AddGroupUsr from '../Container/AddGroupUsr';
 import Ibutton from '../components/Chat/Ibutton';
 import LastMessage from '../components/Chat/LastMessage';

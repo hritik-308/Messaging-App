@@ -10,7 +10,7 @@ const MsgComponent = (props) => {
 
 
     // console.log('props',props)
-    // console.log("item",item)
+    console.log("item",item.Images)
     
 
     return (
@@ -26,6 +26,23 @@ const MsgComponent = (props) => {
                     [styles.left]
                 ]}
             />
+            <View
+                style={[styles.masBox, {
+                    alignSelf: sender ? 'flex-end' : 'flex-start',
+                    // borderWidth:1,
+                    marginBottom:-2
+                  
+                }]}
+            >
+                
+                    { !sender ?
+                    <Text style={{ paddingLeft: 5, color:  sender ? "#707070" : "#707070",fontFamily:FONTS.Regular,fontSize:12.5 }}>{item.senderName}</Text>
+                    :
+
+                    <Text style={{ paddingLeft: 5, color:  sender ? "#707070" : "#707070",fontFamily:FONTS.Regular,fontSize:12.5 }}>{null}</Text>
+                
+                    }
+            </View>
 
             <View
                 style={[styles.masBox, {
@@ -34,16 +51,19 @@ const MsgComponent = (props) => {
                     backgroundColor: sender ? '#2994FF' : "#707070"
                 }]}
             >
-                 <Text style={{ paddingLeft: 5, color:  sender ? COLORS.black : COLORS.white,fontFamily:FONTS.Regular,fontSize:12.5,fontSize:13,fontWeight:'bold' }}>
-                    {item.senderName}
-                </Text>
-                { item.Images == {} ? 
-
+                
+                { item.Images===undefined ||item.Images===null||item.Images.length===0  ?  
                 <Text style={{ paddingLeft: 5, color:  sender ? COLORS.black : COLORS.white,fontFamily:FONTS.Regular,fontSize:14,marginTop:4 }}>
                     {item.message}
-                </Text>   :
-                <Image source={{uri:item.Images}}/>
-}
+                </Text>  
+                  : (item.Images.map(it=>{
+                    return(
+                        <Image style={{height:200,width:200,zIndex:99}} source={{uri:it.path}}/> 
+                    )
+                  }))
+                  
+
+} 
                 <View style={{flexDirection:'row'}}>
                 <TimeDelivery
                     sender={sender}

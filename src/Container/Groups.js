@@ -5,6 +5,7 @@ import {
   TextInput,
   FlatList,
   Image,
+  ActivityIndicator
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
@@ -38,6 +39,8 @@ const Groups = ({navigation}, props) => {
       .ref('/Groups/')
       .on('value', snapshot => {
         setData(Object.values(snapshot.val()));
+        
+        console.log('grp Data==>',(Object.values(snapshot.val(snapshot.val(Object.values(snapshot.val()))))).map(it=>(it.users)))
       });
   };
 
@@ -60,6 +63,10 @@ const Groups = ({navigation}, props) => {
             .database()
             .ref('/GroupChat/' + data.groupId + '/' + userData.id)
             .update(myData);
+
+            // if(userData.id===){
+
+            // }
 
           navigation.navigate('GrpMessages', {GroupUsers: data.groupId});
         }

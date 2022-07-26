@@ -64,9 +64,7 @@ const AddGroupUsr = ({navigation}, values) => {
       groupId: uuid.v4(),
       groupName: groupName,
       groupDiscription: groupDiscription,
-      usersData: {
-        users: nUsers,
-      },
+      users: [...nUsers,userData],
       // userrsName:GroupDatas.groupName
     };
     const newReference = firebase

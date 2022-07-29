@@ -10,7 +10,7 @@ const MsgComponent = (props) => {
 
 
     // console.log('props',props)
-    console.log("item",item.Images)
+    // console.log("item",item.Images)
     
 
     return (

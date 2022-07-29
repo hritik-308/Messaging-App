@@ -40,7 +40,7 @@ const Groups = ({navigation}, props) => {
       .on('value', snapshot => {
         setData(Object.values(snapshot.val()));
         
-        console.log('grp Data==>',(Object.values(snapshot.val(snapshot.val(Object.values(snapshot.val()))))).map(it=>(it.users)))
+        console.log('grp Data==>',(Object.values(snapshot.val())))
       });
   };
 

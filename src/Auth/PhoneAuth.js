@@ -33,7 +33,9 @@ export default function LoginScreen({navigation}, values) {
   const [Account, setAccount] = useState();
 
   const dispatch = useDispatch();
-  // const {currUser}= useSelector(state =>state.User.userData)
+  const {currUser}= useSelector(state =>state.User)
+
+  console.log(currUser)
   const createUser = async () => {
     const usersData = {
       id: uuid.v4(),
@@ -81,8 +83,13 @@ export default function LoginScreen({navigation}, values) {
   }
   async function confirmCode() {
     try {
-      await confirm.confirm(code);
-      navigation.replace('ChatList', {userData: uData});
+      await confirm.confirm(code).then(response =>{
+        console.log('hswf==>',response)
+    setUser(response)
+    // navigation.replace('ChatList', {userData: uData});
+
+    })
+      // dispatch(setUser())
     } catch (error) {
       Alert.alert('Invalid code.', error.message);
     }

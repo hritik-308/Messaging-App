@@ -7,7 +7,8 @@ import {
   FlatList,
   TextInput,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  ScrollView,
 } from 'react-native';
 import React, {useState, useCallback, useEffect} from 'react';
 import AllUsers from './allUsers';
@@ -22,15 +23,17 @@ import ChatHeader from '../components/Header/ChatHeader';
 import SimpleToast from 'react-native-simple-toast';
 import {lstmsg} from '../redux/reducer/user';
 import {Moment} from 'moment';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const Chat = (props, {navigation}) => {
   const dispatch = useDispatch();
   const {userData} = useSelector(state => state.User);
   const {receiverData} = props.route.params;
   const {lstms} = receiverData.lastMsg;
-  const [loading, setLoading] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  const [image, setImage] = useState([]);
   const [msg, setMsg] = React.useState('');
+  const [time,setTime]=useState()
   const [disabled, setdisabled] = React.useState(false);
   const [allChat, setallChat] = React.useState([]);
   const windowWidth = Dimensions.get('window').width;
@@ -38,12 +41,43 @@ const windowHeight = Dimensions.get('window').height;
 
   // console.log('Day of message==>',moment(receiverData.sendTime).format('dddd'))
 
+  const choosePhotoFromLibrary = () => {
+    const imageList = [];
+    ImagePicker.openPicker({
+      multiple: true,
+      waitAnimationEnd: false,
+      includeExif: true,
+      forceJpg: true,
+      width: 300,
+      height: 300,
+      cropping: true,
+      compressImageQuality: 0.7,
+      maxFiles: 10,
+      mediaType: 'any',
+      includeBase64: true,
+    }).then(response => {
+      console.log('Response', response);
+      // setImage(image.path);
+      response.map(Images => {
+        // console.log(Images.path)
+
+        imageList.push({
+          path: Images.path,
+        });
+      });
+      setImage(imageList);
+    });
+  };
+
+
+
   useEffect(() => {
     const onChildAdd = firebase
       .database()
       .ref('/messages/' + receiverData.roomId)
       .on('child_added', snapshot => {
         setallChat(state => [snapshot.val(), ...state]);
+        setTime(snapshot.val().sendTime)
       });
     return () =>
       firebase
@@ -68,6 +102,7 @@ const windowHeight = Dimensions.get('window').height;
       sendTime: moment().format(''),
       msgType: 'text',
       senderName: userData.Name,
+      Images: image,
     };
 
     const newReference = firebase
@@ -92,16 +127,23 @@ const windowHeight = Dimensions.get('window').height;
         .update(chatListupdate);
 
       setMsg('');
+      setImage([]);
       setdisabled(false);
     });
   };
   useEffect(() => {
     setTimeout(() => {
       setLoading(!loading);
-    }, 1000);
+    }, 500);
   }, []);
 
   return (
+    <View style={styles.container}>
+      {loading ? (
+        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+          <ActivityIndicator size={'large'} color="#2994FF" />
+        </View>
+      ) : (
     <View style={styles.container}>
       <View
         style={{
@@ -162,64 +204,129 @@ const windowHeight = Dimensions.get('window').height;
       </View>
 
       <View
-        style={{
-          // backgroundColor: '#2994FF',
-          // elevation: 5,
-          // height: 60,
-          flexDirection: 'row',
-          // alignItems: 'center',
-          // paddingVertical: 7,
-          // justifyContent: 'space-evenly',
-          
-         
-        }}>
-        <TextInput
-          style={{
-            backgroundColor: '#f3f2f3',
-            overflow: 'hidden',
-            alignItems: 'center',
-            flexDirection: 'row',
-            height: 90,
-            width: '74%',
-            borderRadius: 6,
-            borderColor:'#707070',
-            marginHorizontal: 15,
-            marginVertical: 5,
-            borderWidth: 1
-          }}
-          placeholder="type a message"
-          placeholderTextColor={COLORS.black}
-          multiline={true}
-          value={msg}
-          onChangeText={val => setMsg(val)}
-        />
-        <View style={{position:'absolute',marginLeft:14}}>
-        <View style={{backgroundColor:"#2994FF",marginTop:8,height:40,width:40,left:300,position:'absolute',borderRadius:5}}>
-        <TouchableOpacity disabled={disabled} onPress={()=>SimpleToast.show('Implementation in progress.....')}>
-          <Image
-            source={require('../../Assets/camera.png')}
-            style={{position:'absolute',left:'8.33%',right:'8.33%',top:'8.33%',bottom:'8.33%',marginTop:12,marginLeft:7}}
-          />
-        </TouchableOpacity>
-        </View>
-        <View style={{backgroundColor:"#2994FF",marginTop:55,height:40,width:40,left:300,position:'absolute',borderRadius:5}}>
-        <TouchableOpacity disabled={disabled} onPress={sendMsg}>
-          <Image
-            source={require('../../Assets/msg.png')}
-            style={{position:'absolute',left:'8.33%',right:'8.33%',top:'8.33%',bottom:'8.33%',marginTop:12,marginLeft:7}}
-          />
-        </TouchableOpacity>
-        </View>
-        </View>
-      </View>
+            style={{
+              flexDirection: 'row',
+            }}>
+            <View style={styles.TinputView}>
+              <ScrollView horizontal={true}>
+                <View style={{flexDirection: 'row', padding: 20}}>
+                  {image.map(item => {
+                    // console.log('lkdnfgne----',item.path)
+                    return (
+                      <Image
+                        style={{
+                          height: 200,
+                          width: 200,
+                          backgroundColor: 'red',
+                          borderColor: 'dodgerblue',
+                          marginVertical: 15,
+                        }}
+                        source={{uri: item.path}}
+                      />
+                    );
+                  })}
+                </View>
+              </ScrollView>
+
+              <TextInput
+                style={styles.Tinput}
+                placeholder="type a message"
+                placeholderTextColor={COLORS.black}
+                multiline={true}
+                value={msg}
+                onChangeText={val => setMsg(val)}
+              />
+            </View>
+            <View
+              style={{
+                backgroundColor: '#2994FF',
+                marginTop: 8,
+                height: 40,
+                width: 40,
+                left: 300,
+                position: 'absolute',
+                borderRadius: 5,
+              }}>
+              <TouchableOpacity
+                disabled={disabled}
+                onPress={choosePhotoFromLibrary}>
+                <Image
+                  source={require('../../Assets/camera.png')}
+                  style={{
+                    position: 'absolute',
+                    left: '8.33%',
+                    right: '8.33%',
+                    top: '8.33%',
+                    bottom: '8.33%',
+                    marginTop: 12,
+                    marginLeft: 7,
+                    
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                backgroundColor: '#2994FF',
+                marginTop: 55,
+                height: 40,
+                width: 40,
+                left: 300,
+                position: 'absolute',
+                borderRadius: 5,
+              }}>
+              <TouchableOpacity disabled={disabled} onPress={sendMsg}>
+                <Image
+                  source={require('../../Assets/msg.png')}
+                  style={{
+                    position: 'absolute',
+                    left: '8.33%',
+                    right: '8.33%',
+                    top: '8.33%',
+                    bottom: '8.33%',
+                    marginTop: 12,
+                    marginLeft: 7,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+     
+    </View>
+     )}
     </View>
   );
 };
+
+export default Chat;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  Tinput: {
+    backgroundColor: '#f3f2f3',
+    overflow: 'hidden',
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 40,
+    width: '77%',
+    borderColor: '#707070',
+    marginHorizontal: 10,
+    marginVertical: 5,
+  },
+  TinputView: {
+    backgroundColor: '#f3f2f3',
+    overflow: 'hidden',
+    // backgroundColor:'blue',
+    // alignItems: 'center',
+    flexDirection: 'column',
+    // height: 90,
+    width: '77%',
+    borderRadius: 6,
+    borderColor: '#707070',
+    marginHorizontal: 10,
+    marginVertical: 2,
+    borderWidth: 1,
+  },
 });
-
-export default Chat;

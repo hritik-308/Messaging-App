@@ -12,9 +12,40 @@ import AddGroupUsr from '../Container/AddGroupUsr';
 import Ibutton from '../components/Chat/Ibutton';
 import LastMessage from '../components/Chat/LastMessage';
 import SendImg from '../components/Chat/SendImg';
+import { useSelector } from 'react-redux';
+import { setUser } from '../redux/reducer/user';
 const Stack = createNativeStackNavigator();
 export default function StackNavigation() {
+
+  const currUser= useSelector(state=>state.User)
+  console.log('currUser--->',currUser.login)
+
+  if(!currUser.login){
+    return (
+  
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}>
+         
+          <Stack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+            options={{headerShown: false}}
+          />
+      
+      </Stack.Navigator>
+    );
+  }else{
+  
   return (
+  
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
@@ -25,16 +56,12 @@ export default function StackNavigation() {
           fontWeight: 'bold',
         },
       }}>
+         
         <Stack.Screen
           name="ChatList"
           component={ChatList}
           options={{headerShown: false}}
         />
-      <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={{headerShown: false}}
-      />
       <Stack.Screen
         name="AllUsers"
         component={AllUsers}
@@ -87,4 +114,5 @@ export default function StackNavigation() {
       />
     </Stack.Navigator>
   );
+    }
 }

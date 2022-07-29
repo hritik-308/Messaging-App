@@ -18,9 +18,12 @@ import {Center, Hidden, Icon, ScrollView} from 'native-base';
 import moment from 'moment';
 import SimpleToast from 'react-native-simple-toast';
 import ImagePicker from 'react-native-image-crop-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {storage} from '@react-native-firebase/storage';
+import { setImages } from '../redux/reducer/image';
 
 const GrpMessages = (props, {navigation}) => {
-  console.log(props.route.params.gId)
+  // console.log(props.route.params.gId)
 
   const dispatch = useDispatch();
 
@@ -32,7 +35,8 @@ const GrpMessages = (props, {navigation}) => {
   const [data, setData] = useState([]);
   const [image, setImage] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [time,setTime]=useState()
+  const [time, setTime] = useState();
+  const[Path,setPath]=useState();
 
   const takePhotoFromCamera = () => {
     ImagePicker.openCamera({
@@ -41,7 +45,7 @@ const GrpMessages = (props, {navigation}) => {
       cropping: true,
       compressImageQuality: 0.7,
     }).then(image => {
-      console.log(image);
+      // console.log(image);
       setImage(image.path);
     });
   };
@@ -61,16 +65,28 @@ const GrpMessages = (props, {navigation}) => {
       mediaType: 'any',
       includeBase64: true,
     }).then(response => {
-      console.log('Response', response);
-      // setImage(image.path);
+      // console.log('Response', JSON.stringify( response));
       response.map(Images => {
-        // console.log(Images.path)
-
         imageList.push({
           path: Images.path,
         });
+        // setPath(Images.path)
       });
       setImage(imageList);
+      const strg=(imageList.map(item=> {return item.path}))
+     const Storage=imageList.map(it=> {return it })
+      dispatch(setImages(...Storage))
+      console.log('storage',...Storage);
+      const uploadTask = firebase.storage()
+        .ref()
+        .child(`/UploadedImages/${Date.now()}`)
+        .putFile(...strg)
+        uploadTask.on(
+          'state_changed',
+          snapshot => {
+            var progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+         });
     });
   };
 
@@ -82,7 +98,7 @@ const GrpMessages = (props, {navigation}) => {
       .on('child_added', snapshot => {
         // console.log('A new node has been added', Object.values(snapshot.val(snapshot.val())).map(item=>(item.Images)));
         setallChat(state => [snapshot.val(), ...state]);
-        setTime(snapshot.val().sendTime)
+        setTime(snapshot.val().sendTime);
         // setAllImages(state=>[snapshot.val(),...state]);
       });
     // Stop listening for updates when no longer required
@@ -143,8 +159,8 @@ const GrpMessages = (props, {navigation}) => {
       setLoading(false);
     }, 800);
   });
-
-  console.log(moment(time).format('dddd'))
+    
+  // console.log(moment(time).format('dddd'))
 
   return (
     <View style={styles.container}>
@@ -190,8 +206,10 @@ const GrpMessages = (props, {navigation}) => {
               onPress={() =>
                 props.navigation.navigate('Ibutton', {
                   groupId: props.route.params.gId,
+                  Images:image
                 })
               }>
+                
               <Image source={require('../../Assets/Vector.png')} />
             </TouchableOpacity>
           </View>
@@ -200,10 +218,9 @@ const GrpMessages = (props, {navigation}) => {
             source={require('../../Assets/Line.png')}
           />
           <View style={{flex: 1}}>
-
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Text>{moment(time).format('dddd')}</Text>
-        </View>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Text>{moment(time).format('dddd')}</Text>
+            </View>
             <FlatList
               style={{flex: 1}}
               setLoading={false}
@@ -276,7 +293,6 @@ const GrpMessages = (props, {navigation}) => {
                     bottom: '8.33%',
                     marginTop: 12,
                     marginLeft: 7,
-                    
                   }}
                 />
               </TouchableOpacity>

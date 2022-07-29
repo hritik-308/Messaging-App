@@ -1,14 +1,15 @@
 import {View, Text, Image, TouchableOpacity, TextInput,LogBox} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {firebase} from '@react-native-firebase/database';
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
 import {FlatList, ScrollView} from 'native-base';
 import moment from 'moment';
+import { removeUser } from '../redux/reducer/user';
+
 
 const ChatList = ({navigation}) => {
   const {userData} = useSelector(state => state.User);
-
-  // console.log("userData",userData);
+  const dispatch=useDispatch()
 
   const [chatList, setchatList] = useState([]);
   const [search, setSearch] = useState('');
@@ -89,6 +90,10 @@ const ChatList = ({navigation}) => {
         }
       });
   };
+  const LogOut=()=>{
+    dispatch(removeUser()),
+    navigation.navigate("LoginScreen")
+  }
   const renderItem = ({item}) => {
     // if (item.sendTime === moment().format('LLL')) {
     //   // console.log('iffff')
@@ -150,10 +155,16 @@ const ChatList = ({navigation}) => {
             justifyContent: 'center',
             alignItems: 'center',
             marginTop: 5,
+            flexDirection:'row'
           }}>
           <Text style={{color: '#2994FF', fontWeight: 'bold', fontSize: 30}}>
             Messages
           </Text>
+          <View style={{height:23,width:23,left:320,position:'absolute'}}>
+          <TouchableOpacity style={{height:23,width:23,}} onPress={()=>LogOut()}>
+            <Image style={{height:23,width:23}} source={require('../../Assets/logout.png')}/>
+          </TouchableOpacity>
+          </View>
         </View>
         <View style={{flexDirection: 'row'}}>
           <View

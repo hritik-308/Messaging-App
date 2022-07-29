@@ -89,7 +89,7 @@ const GroupChat = ({navigation}, values) => {
       .once('value')
       .then(snapshot => {
         Object.values(snapshot.val()).map(item => {
-          console.log(item.Name);
+          // console.log(item.Name);
         });
       });
   };

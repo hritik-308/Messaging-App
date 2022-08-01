@@ -102,7 +102,7 @@ const windowHeight = Dimensions.get('window').height;
       sendTime: moment().format(''),
       msgType: 'text',
       senderName: userData.Name,
-      Images: image,
+      Images: [...image],
     };
 
     const newReference = firebase
@@ -246,6 +246,7 @@ const windowHeight = Dimensions.get('window').height;
                 left: 300,
                 position: 'absolute',
                 borderRadius: 5,
+                marginLeft:29
               }}>
               <TouchableOpacity
                 disabled={disabled}
@@ -274,6 +275,7 @@ const windowHeight = Dimensions.get('window').height;
                 left: 300,
                 position: 'absolute',
                 borderRadius: 5,
+                marginLeft:29
               }}>
               <TouchableOpacity disabled={disabled} onPress={sendMsg}>
                 <Image
@@ -305,7 +307,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   Tinput: {
-    backgroundColor: '#f3f2f3',
+    backgroundColor: '#f3f2f3',                     
     overflow: 'hidden',
     alignItems: 'center',
     flexDirection: 'row',

@@ -14,7 +14,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {firebase} from '@react-native-firebase/database';
 import MsgComponent from '../components/Chat/MsgComponent';
 import {COLORS} from '../components/constants/colors';
-import {Center, Hidden, Icon, ScrollView} from 'native-base';
+import {Center, Hidden, Icon, ScrollView} from 'native-base';         
 import moment from 'moment';
 import SimpleToast from 'react-native-simple-toast';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -87,9 +87,24 @@ const GrpMessages = (props, {navigation}) => {
             var progress =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
          });
+         let GroupImgs=image.map(it=>(it.path))
+         const AddImage=firebase.database()
+         .ref("/Groups/")
+         .once('value')
+      .then(snapshot => {
+        // console.log('User data: ', Object.keys((snapshot.val())));
+        Object.keys((snapshot.val())).map(item=>{if(item===props.route.params.gId){
+          firebase.database()
+         .ref(`/Groups/${props.route.params.gId}` )
+         .update({GroupImg:[GroupImgs,...image.map(it=>(it.path))]})
+         console.log('hii=====<><><>',image.map(it=>(it.path)))
+
+        }} )
+
+          });
+
     });
   };
-
   // console.log('images--->', image);
   useEffect(() => {
     const onChildAdd = firebase
@@ -248,11 +263,12 @@ const GrpMessages = (props, {navigation}) => {
                     return (
                       <Image
                         style={{
-                          height: 200,
-                          width: 200,
+                          height: 120,
+                          width: 120,
                           backgroundColor: 'red',
                           borderColor: 'dodgerblue',
                           marginVertical: 15,
+                          marginLeft:8
                         }}
                         source={{uri: item.path}}
                       />
@@ -274,6 +290,7 @@ const GrpMessages = (props, {navigation}) => {
               style={{
                 backgroundColor: '#2994FF',
                 marginTop: 8,
+                marginLeft:25,
                 height: 40,
                 width: 40,
                 left: 300,
@@ -300,6 +317,7 @@ const GrpMessages = (props, {navigation}) => {
             <View
               style={{
                 backgroundColor: '#2994FF',
+                marginLeft:25,
                 marginTop: 55,
                 height: 40,
                 width: 40,

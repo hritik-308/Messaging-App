@@ -58,7 +58,7 @@ const MsgComponent = (props) => {
                 </Text>  
                   : (item.Images.map(it=>{
                     return(
-                        <Image style={{height:200,width:200,zIndex:99}} source={{uri:it.path}}/> 
+                        <Image style={{height:200,width:200,zIndex:99,marginTop:8}} source={{uri:it.path}}/> 
                     )
                   }))
                   

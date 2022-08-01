@@ -65,6 +65,7 @@ const AddGroupUsr = ({navigation}, values) => {
       groupName: groupName,
       groupDiscription: groupDiscription,
       users: [...nUsers,userData],
+      GroupImg:{}
       // userrsName:GroupDatas.groupName
     };
     const newReference = firebase

@@ -17,7 +17,7 @@ const Ibutton = props => {
 
   const ImgData = useSelector(state => state.image.imageData.path);
   // setGrpImg(...GrpImg,ImgData)
-  console.log('images', ImgData);
+  console.log('images', props.route.params.Images);
 
   //   console.log('props', props.route.params.groupId);
   const [group, setGroup] = useState();

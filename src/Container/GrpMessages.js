@@ -98,6 +98,7 @@ const GrpMessages = (props, {navigation}) => {
          .ref(`/Groups/${props.route.params.gId}` )
          .update({GroupImg:[GroupImgs,...image.map(it=>(it.path))]})
          console.log('hii=====<><><>',image.map(it=>(it.path)))
+        //  dispatch(setImages(...image.map(it=>(it.path))))
 
         }} )
 
@@ -111,6 +112,7 @@ const GrpMessages = (props, {navigation}) => {
       .database()
       .ref('/messages/' + props.route.params.RoomId)
       .on('child_added', snapshot => {
+        console.log('DB data=====>',snapshot.val())
         // console.log('A new node has been added', Object.values(snapshot.val(snapshot.val())).map(item=>(item.Images)));
         setallChat(state => [snapshot.val(), ...state]);
         setTime(snapshot.val().sendTime);
@@ -124,16 +126,14 @@ const GrpMessages = (props, {navigation}) => {
         .off('child_added', onChildAdd);
   }, []);
 
-  const msgvalid = txt => txt && txt.replace(/\s/g, '').length;
+  const msgvalid = txt => txt && (txt.replace(/\s/g, '')).length;
 
   const sendMsg = () => {
-    if (msgvalid(msg) == 0 || msg === '') {
+    console.log(image)
+     if (image.length===0 && msgvalid(msg) == 0 ) {
       SimpleToast.show('Enter something....');
-      return false;
-    } else if (image === [] || image === null || image === undefined) {
-      SimpleToast.show('Enter something....');
-      return false;
-    }
+      // return false;
+    }else{
     setdisabled(true);
     let msgData = {
       roomId: props.route.params.RoomId,
@@ -144,7 +144,6 @@ const GrpMessages = (props, {navigation}) => {
       senderName: userData.Name,
       Images: image,
     };
-
     const newReference = firebase
       .database()
       .ref('/messages/' + props.route.params.RoomId)
@@ -168,7 +167,8 @@ const GrpMessages = (props, {navigation}) => {
       setImage([]);
       setdisabled(false);
     });
-  };
+  }
+}
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);

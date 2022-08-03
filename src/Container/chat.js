@@ -89,10 +89,11 @@ const windowHeight = Dimensions.get('window').height;
   const msgvalid = txt => txt && txt.replace(/\s/g, '').length;
 
   const sendMsg = () => {
-    if (msg == '' || msgvalid(msg) == 0) {
+    console.log(image)
+     if (image.length===0 && msgvalid(msg) == 0 ) {
       SimpleToast.show('Enter something....');
-      return false;
-    }
+      // return false;
+    }else{
     setdisabled(true);
     let msgData = {
       roomId: receiverData.roomId,
@@ -130,7 +131,8 @@ const windowHeight = Dimensions.get('window').height;
       setImage([]);
       setdisabled(false);
     });
-  };
+  }
+}
   useEffect(() => {
     setTimeout(() => {
       setLoading(!loading);
@@ -175,7 +177,7 @@ const windowHeight = Dimensions.get('window').height;
           </Text>
         </View>
 
-        <TouchableOpacity onPress={() => props.navigation.navigate('Profile')}>
+        <TouchableOpacity onPress={() => props.navigation.navigate('Profile' , {Images:image,Data:receiverData})}>
           <Image source={require('../../Assets/Vector.png')} />
         </TouchableOpacity>
       </View>

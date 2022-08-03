@@ -1,15 +1,21 @@
-import {View, Text, Image, TouchableOpacity, TextInput,LogBox} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  LogBox,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {firebase} from '@react-native-firebase/database';
-import {useSelector,useDispatch} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {FlatList, ScrollView} from 'native-base';
 import moment from 'moment';
-import { removeUser } from '../redux/reducer/user';
-
+import {removeUser} from '../redux/reducer/user';
 
 const ChatList = ({navigation}) => {
   const {userData} = useSelector(state => state.User);
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
 
   const [chatList, setchatList] = useState([]);
   const [search, setSearch] = useState('');
@@ -41,8 +47,7 @@ const ChatList = ({navigation}) => {
       });
   };
 
-  const SearchBtn =
-  chatList.filter(val => {
+  const SearchBtn = chatList.filter(val => {
     if (search == '') {
       return val;
     } else if (val.Name.toLowerCase().includes(search.toLowerCase())) {
@@ -90,10 +95,9 @@ const ChatList = ({navigation}) => {
         }
       });
   };
-  const LogOut=()=>{
-    dispatch(removeUser()),
-    navigation.navigate("LoginScreen")
-  }
+  const LogOut = () => {
+    dispatch(removeUser()), navigation.navigate('LoginScreen');
+  };
   const renderItem = ({item}) => {
     // if (item.sendTime === moment().format('LLL')) {
     //   // console.log('iffff')
@@ -107,9 +111,11 @@ const ChatList = ({navigation}) => {
     const chatList = () => {
       createChatList(item);
     };
-    
+
     return (
-      <View style={{flexDirection: 'row', marginTop: 40}}>
+      
+      <View
+        style={{flexDirection: 'row', flex: 1, borderWidth: 1, marginTop: 40}}>
         <View
           style={{
             marginLeft: 10,
@@ -122,7 +128,7 @@ const ChatList = ({navigation}) => {
               uri: 'https://media.gettyimages.com/photos/tesla-ceo-elon-musk-speaks-during-the-unveiling-of-the-new-tesla-y-picture-id1130598318?s=2048x2048',
             }}
             style={{
-              position:'absolute',
+              position: 'absolute',
               justifyContent: 'flex-start',
               height: 48,
               width: 50,
@@ -133,9 +139,13 @@ const ChatList = ({navigation}) => {
         </View>
         <TouchableOpacity onPress={() => chatList()}>
           <View style={{marginLeft: 40}}>
-            <Text style={{color:"#707070",fontWeight:'500',fontSize:15}}>{item.Name}</Text>
+            <Text style={{color: '#707070', fontWeight: '500', fontSize: 15}}>
+              {item.Name}
+            </Text>
             <View style={{marginTop: 3}}>
-              <Text style={{color: '#707070',fontWeight:'400',fontSize:13}}>{item.lastMsg}</Text>
+              <Text style={{color: '#707070', fontWeight: '400', fontSize: 13}}>
+                {item.lastMsg}
+              </Text>
             </View>
           </View>
           <View style={{marginLeft: 230, flexDirection: 'row', marginTop: -21}}>
@@ -148,24 +158,31 @@ const ChatList = ({navigation}) => {
     );
   };
   return (
-    <ScrollView>
+    <ScrollView style={{flex: 1}}>
       <View>
         <View
           style={{
             justifyContent: 'center',
             alignItems: 'center',
             marginTop: 5,
-            flexDirection:'row'
+            flexDirection: 'row',
           }}>
           <Text style={{color: '#2994FF', fontWeight: 'bold', fontSize: 30}}>
             Messages
           </Text>
-          <View style={{height:23,width:23,left:320,position:'absolute'}}>
-          <TouchableOpacity style={{height:23,width:23,}} onPress={()=>LogOut()}>
-            <Image style={{height:23,width:23}} source={require('../../Assets/logout.png')}/>
-          </TouchableOpacity>
+          <View
+            style={{height: 23, width: 23, left: 320, position: 'absolute'}}>
+            <TouchableOpacity
+              style={{height: 23, width: 23}}
+              onPress={() => LogOut()}>
+              <Image
+                style={{height: 23, width: 23}}
+                source={require('../../Assets/logout.png')}
+              />
+            </TouchableOpacity>
           </View>
         </View>
+
         <View style={{flexDirection: 'row'}}>
           <View
             style={{
@@ -176,10 +193,10 @@ const ChatList = ({navigation}) => {
               height: 60,
               width: '77%',
               borderRadius: 6,
-              borderColor:'#707070',
+              borderColor: '#707070',
               marginHorizontal: 10,
               marginVertical: 20,
-              borderWidth: 1
+              borderWidth: 1,
             }}>
             <Image
               style={{
@@ -190,7 +207,7 @@ const ChatList = ({navigation}) => {
               source={require('../../Assets/search.png')}
             />
             <TextInput
-              style={{flexWrap: 'wrap', flex: 1, }}
+              style={{flexWrap: 'wrap', flex: 1}}
               placeholder="Search"
               value={search}
               onChangeText={text => {
@@ -222,13 +239,40 @@ const ChatList = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
-        <FlatList data={SearchBtn} renderItem={renderItem} />
+        <View
+        style={{
+          position: 'absolute',
+          right: 0,
+          bottom: -40,
+          borderWidth: 1,
+          flex: 1,
+          zIndex: 2,
+        }}>
+        <TouchableOpacity
+          style={{
+            // position: 'relative',
+            // overflow: 'visible',
+            // left: 170,
+            // marginVertical: 290,
+            // marginLeft: 140,
+            // borderRadius: 100,
+            height: 60,
+            width: 60,
+          }}
+          onPress={() => navigation.navigate('AllUsers')}>
+          <View style={{justifyContent: 'center', height: 30, width: 30}}>
+            <Image
+              style={{height: 40, width: 40}}
+              source={require('../../Assets/newAllUsers.png')}
+            />
+          </View>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={{marginTop: 380, justifyContent: 'center', marginLeft: 140}}
-        onPress={() => navigation.navigate('AllUsers')}>
-        <Text>All Users</Text>
-      </TouchableOpacity>
+        <View>
+          <FlatList data={SearchBtn} renderItem={renderItem} />
+        </View>
+      </View>
+ 
     </ScrollView>
   );
 };
